@@ -9,37 +9,41 @@ struct SwipeToDeleteModifier: ViewModifier {
 
     func body(content: Content) -> some View {
         ZStack(alignment: .trailing) {
-            // Delete button background
-            HStack {
-                Spacer()
-                Button(action: {
-                    withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
-                        HapticManager.shared.warning()
-                        onDelete()
+            // Delete button background - only show when swiped
+            if offset < 0 || dragOffset < 0 {
+                HStack {
+                    Spacer()
+                    Button(action: {
+                        withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
+                            HapticManager.shared.warning()
+                            onDelete()
+                        }
+                    }) {
+                        VStack {
+                            Image(systemName: "trash.fill")
+                                .font(.title2)
+                            Text("Delete")
+                                .font(.caption)
+                                .fontWeight(.semibold)
+                        }
+                        .foregroundColor(.white)
+                        .frame(width: 80)
                     }
-                }) {
-                    VStack {
-                        Image(systemName: "trash.fill")
-                            .font(.title2)
-                        Text("Delete")
-                            .font(.caption)
-                            .fontWeight(.semibold)
-                    }
-                    .foregroundColor(.white)
-                    .frame(width: 80)
-                }
-                .frame(maxHeight: .infinity)
-                .background(
-                    LinearGradient(
-                        colors: [Color.red, Color.red.opacity(0.8)],
-                        startPoint: .leading,
-                        endPoint: .trailing
+                    .frame(maxHeight: .infinity)
+                    .background(
+                        LinearGradient(
+                            colors: [Color.red, Color.red.opacity(0.8)],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
                     )
-                )
+                }
+                .transition(.move(edge: .trailing))
             }
 
             // Content
             content
+                .background(Color.clear)
                 .offset(x: offset + dragOffset)
                 .gesture(
                     DragGesture()
@@ -60,6 +64,7 @@ struct SwipeToDeleteModifier: ViewModifier {
                         }
                 )
         }
+        .clipped()
     }
 }
 

@@ -43,9 +43,9 @@ struct ContentView: View {
         let appearance = UITabBarAppearance()
         appearance.configureWithOpaqueBackground()
 
-        // Adapt to color scheme
+        // Adapt to color scheme - use softer dark mode background
         let backgroundColor = themeManager.currentTheme.colorScheme == .dark || systemColorScheme == .dark
-            ? UIColor(Color(hex: "2C2C2E"))
+            ? UIColor(Color(hex: "1C1C1E"))
             : UIColor(ColorTheme.cardBackground)
 
         appearance.backgroundColor = backgroundColor

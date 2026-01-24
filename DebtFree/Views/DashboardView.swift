@@ -68,13 +68,11 @@ struct DashboardView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    HStack {
-                        Text("DebtFree")
-                            .font(.title2)
-                            .fontWeight(.bold)
-                            .foregroundStyle(ColorTheme.gradient1)
-                    }
-                    .accessibilityAddTraits(.isHeader)
+                    Text("DebtFree")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .foregroundStyle(ColorTheme.gradient1)
+                        .accessibilityAddTraits(.isHeader)
                 }
 
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -195,7 +193,7 @@ struct DashboardView: View {
                         .foregroundColor(ColorTheme.orange)
                 }
                 .accessibilityElement(children: .combine)
-                .accessibilityLabel("\(progress.currentStreak) day streak")
+                .accessibilityLabel("\(progress.currentStreak) month streak")
             }
         }
         .padding(20)

@@ -43,25 +43,42 @@ class ThemeManager: ObservableObject {
 
 // MARK: - Dark Mode Color Extensions
 extension ColorTheme {
-    // Dynamic colors that adapt to dark mode
+    // Dynamic colors that adapt to dark mode - Soft, beautiful palette inspired by Mimo
     static func dynamicBackground(colorScheme: ColorScheme) -> Color {
-        colorScheme == .dark ? Color(hex: "1C1C1E") : background
+        colorScheme == .dark ? Color(hex: "0D0D0D") : background
     }
 
     static func dynamicCardBackground(colorScheme: ColorScheme) -> Color {
-        colorScheme == .dark ? Color(hex: "2C2C2E") : .white
+        colorScheme == .dark ? Color(hex: "1C1C1E") : .white
     }
 
     static func dynamicTextPrimary(colorScheme: ColorScheme) -> Color {
-        colorScheme == .dark ? Color(hex: "FFFFFF") : textPrimary
+        colorScheme == .dark ? Color(hex: "F5F5F7") : textPrimary
     }
 
     static func dynamicTextSecondary(colorScheme: ColorScheme) -> Color {
-        colorScheme == .dark ? Color(hex: "AEAEB2") : textSecondary
+        colorScheme == .dark ? Color(hex: "98989D") : textSecondary
     }
 
     static func dynamicShadow(colorScheme: ColorScheme) -> Color {
-        colorScheme == .dark ? Color.black.opacity(0.5) : Color.gray.opacity(0.2)
+        colorScheme == .dark ? Color.black.opacity(0.3) : Color.gray.opacity(0.15)
+    }
+
+    // Softer accent colors for dark mode
+    static func dynamicPink(colorScheme: ColorScheme) -> Color {
+        colorScheme == .dark ? Color(hex: "FF9EBB") : pink
+    }
+
+    static func dynamicPurple(colorScheme: ColorScheme) -> Color {
+        colorScheme == .dark ? Color(hex: "D4A5FF") : purple
+    }
+
+    static func dynamicBlue(colorScheme: ColorScheme) -> Color {
+        colorScheme == .dark ? Color(hex: "A8C7FA") : blue
+    }
+
+    static func dynamicTeal(colorScheme: ColorScheme) -> Color {
+        colorScheme == .dark ? Color(hex: "94D9C3") : teal
     }
 }
 

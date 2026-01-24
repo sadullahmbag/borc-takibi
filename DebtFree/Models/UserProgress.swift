@@ -63,16 +63,26 @@ final class UserProgress {
         let calendar = Calendar.current
 
         if let lastDate = lastPaymentDate {
-            let daysBetween = calendar.dateComponents([.day], from: lastDate, to: Date()).day ?? 0
+            // Check if payment is in a different month
+            let lastMonth = calendar.component(.month, from: lastDate)
+            let lastYear = calendar.component(.year, from: lastDate)
+            let currentMonth = calendar.component(.month, from: Date())
+            let currentYear = calendar.component(.year, from: Date())
 
-            if daysBetween == 1 {
+            // Calculate months between payments
+            let monthsBetween = (currentYear - lastYear) * 12 + (currentMonth - lastMonth)
+
+            if monthsBetween == 1 {
+                // Payment in consecutive month
                 currentStreak += 1
                 if currentStreak > longestStreak {
                     longestStreak = currentStreak
                 }
-            } else if daysBetween > 1 {
+            } else if monthsBetween > 1 {
+                // Missed one or more months, reset streak
                 currentStreak = 1
             }
+            // If monthsBetween == 0, it's the same month, don't change streak
         } else {
             currentStreak = 1
         }
@@ -87,8 +97,8 @@ extension UserProgress {
         ("payment_10", "Getting Started", "Made 10 payments", "⭐", { $0.totalPaid >= 10 }),
         ("debt_free_1", "Debt Destroyer", "Completed 1 debt", "🎊", { $0.debtsCompleted >= 1 }),
         ("debt_free_5", "Debt Slayer", "Completed 5 debts", "🏆", { $0.debtsCompleted >= 5 }),
-        ("streak_7", "Week Warrior", "7-day payment streak", "🔥", { $0.longestStreak >= 7 }),
-        ("streak_30", "Monthly Master", "30-day payment streak", "💪", { $0.longestStreak >= 30 }),
+        ("streak_3", "Consistent Payer", "3-month payment streak", "🔥", { $0.longestStreak >= 3 }),
+        ("streak_6", "Half Year Hero", "6-month payment streak", "💪", { $0.longestStreak >= 6 }),
         ("level_5", "Rising Star", "Reached level 5", "✨", { $0.level >= 5 }),
         ("level_10", "Debt Champion", "Reached level 10", "👑", { $0.level >= 10 }),
         ("paid_1000", "Thousand Club", "Paid $1,000 total", "💵", { $0.totalPaid >= 1000 }),

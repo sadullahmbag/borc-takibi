@@ -4,6 +4,7 @@ import SwiftData
 struct AchievementsView: View {
     @Query private var userProgressList: [UserProgress]
     @StateObject private var currencyManager = CurrencyManager.shared
+    @Environment(\.colorScheme) private var colorScheme
 
     private var userProgress: UserProgress? {
         userProgressList.first
@@ -12,7 +13,7 @@ struct AchievementsView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                ColorTheme.background.ignoresSafeArea()
+                ColorTheme.dynamicBackground(colorScheme: colorScheme).ignoresSafeArea()
 
                 ScrollView {
                     VStack(spacing: 24) {
@@ -52,7 +53,7 @@ struct AchievementsView: View {
 
             Text("Experience: \(progress.experience) / \(progress.experienceToNextLevel)")
                 .font(.caption)
-                .foregroundColor(ColorTheme.textSecondary)
+                .foregroundColor(ColorTheme.dynamicTextSecondary(colorScheme: colorScheme))
 
             ProgressView(value: progress.currentLevelProgress)
                 .progressViewStyle(LinearProgressViewStyle(tint: ColorTheme.purple))
@@ -60,8 +61,14 @@ struct AchievementsView: View {
                 .frame(width: 200)
         }
         .padding(24)
-        .background(Color.white)
+        .background(ColorTheme.dynamicCardBackground(colorScheme: colorScheme))
         .cornerRadius(25)
+        .shadow(
+            color: ColorTheme.dynamicShadow(colorScheme: colorScheme),
+            radius: 8,
+            x: 0,
+            y: 4
+        )
     }
 
     private func statsSection(progress: UserProgress) -> some View {
@@ -69,7 +76,7 @@ struct AchievementsView: View {
             Text("Your Stats")
                 .font(.title2)
                 .fontWeight(.bold)
-                .foregroundColor(ColorTheme.textPrimary)
+                .foregroundColor(ColorTheme.dynamicTextPrimary(colorScheme: colorScheme))
 
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
                 StatCard(
@@ -88,14 +95,14 @@ struct AchievementsView: View {
 
                 StatCard(
                     title: "Current Streak",
-                    value: "\(progress.currentStreak) days",
+                    value: "\(progress.currentStreak) months",
                     color: ColorTheme.orange,
                     icon: "flame.fill"
                 )
 
                 StatCard(
                     title: "Longest Streak",
-                    value: "\(progress.longestStreak) days",
+                    value: "\(progress.longestStreak) months",
                     color: ColorTheme.purple,
                     icon: "star.fill"
                 )
@@ -108,11 +115,11 @@ struct AchievementsView: View {
             Text("Achievements")
                 .font(.title2)
                 .fontWeight(.bold)
-                .foregroundColor(ColorTheme.textPrimary)
+                .foregroundColor(ColorTheme.dynamicTextPrimary(colorScheme: colorScheme))
 
             Text("\(progress.achievementsUnlocked.count) of \(UserProgress.achievements.count) unlocked")
                 .font(.caption)
-                .foregroundColor(ColorTheme.textSecondary)
+                .foregroundColor(ColorTheme.dynamicTextSecondary(colorScheme: colorScheme))
 
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
                 ForEach(UserProgress.achievements, id: \.id) { achievement in
@@ -137,7 +144,7 @@ struct AchievementsView: View {
 
             Text("Add a debt and make your first payment to start earning achievements!")
                 .font(.subheadline)
-                .foregroundColor(ColorTheme.textSecondary)
+                .foregroundColor(ColorTheme.dynamicTextSecondary(colorScheme: colorScheme))
                 .multilineTextAlignment(.center)
                 .padding(.horizontal)
         }
@@ -150,6 +157,7 @@ struct StatCard: View {
     let value: String
     let color: Color
     let icon: String
+    @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
         VStack(spacing: 12) {
@@ -160,22 +168,29 @@ struct StatCard: View {
             Text(value)
                 .font(.title3)
                 .fontWeight(.bold)
-                .foregroundColor(ColorTheme.textPrimary)
+                .foregroundColor(ColorTheme.dynamicTextPrimary(colorScheme: colorScheme))
 
             Text(title)
                 .font(.caption)
-                .foregroundColor(ColorTheme.textSecondary)
+                .foregroundColor(ColorTheme.dynamicTextSecondary(colorScheme: colorScheme))
         }
         .frame(maxWidth: .infinity)
         .padding()
-        .background(Color.white)
+        .background(ColorTheme.dynamicCardBackground(colorScheme: colorScheme))
         .cornerRadius(20)
+        .shadow(
+            color: ColorTheme.dynamicShadow(colorScheme: colorScheme),
+            radius: 5,
+            x: 0,
+            y: 2
+        )
     }
 }
 
 struct AchievementCard: View {
     let achievement: (id: String, title: String, description: String, emoji: String, requirement: (UserProgress) -> Bool)
     let isUnlocked: Bool
+    @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
         VStack(spacing: 8) {
@@ -187,13 +202,13 @@ struct AchievementCard: View {
             Text(achievement.title)
                 .font(.caption)
                 .fontWeight(.semibold)
-                .foregroundColor(ColorTheme.textPrimary)
+                .foregroundColor(ColorTheme.dynamicTextPrimary(colorScheme: colorScheme))
                 .multilineTextAlignment(.center)
                 .lineLimit(2)
 
             Text(achievement.description)
                 .font(.system(size: 10))
-                .foregroundColor(ColorTheme.textSecondary)
+                .foregroundColor(ColorTheme.dynamicTextSecondary(colorScheme: colorScheme))
                 .multilineTextAlignment(.center)
                 .lineLimit(2)
         }
@@ -201,7 +216,11 @@ struct AchievementCard: View {
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 15)
-                .fill(isUnlocked ? Color.white : Color.white.opacity(0.6))
+                .fill(
+                    colorScheme == .dark
+                        ? (isUnlocked ? ColorTheme.dynamicCardBackground(colorScheme: colorScheme) : Color(hex: "2C2C2E").opacity(0.5))
+                        : (isUnlocked ? Color.white : Color.white.opacity(0.6))
+                )
         )
         .overlay(
             RoundedRectangle(cornerRadius: 15)
