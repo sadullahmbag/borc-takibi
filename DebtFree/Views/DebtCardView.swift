@@ -4,6 +4,7 @@ struct DebtCardView: View {
     let debt: Debt
     let onTap: () -> Void
     @StateObject private var currencyManager = CurrencyManager.shared
+    @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
         Button(action: {
@@ -14,15 +15,16 @@ struct DebtCardView: View {
                 HStack {
                     Text(debt.emoji)
                         .font(.system(size: 40))
+                        .accessibilityHidden(true)
 
                     VStack(alignment: .leading, spacing: 4) {
                         Text(debt.name)
                             .font(.headline)
-                            .foregroundColor(ColorTheme.textPrimary)
+                            .foregroundColor(ColorTheme.dynamicTextPrimary(colorScheme: colorScheme))
 
                         Text(debt.category)
                             .font(.caption)
-                            .foregroundColor(ColorTheme.textSecondary)
+                            .foregroundColor(ColorTheme.dynamicTextSecondary(colorScheme: colorScheme))
                     }
 
                     Spacer()
@@ -31,7 +33,7 @@ struct DebtCardView: View {
                         Text(currencyManager.format(debt.currentAmount))
                             .font(.title3)
                             .fontWeight(.bold)
-                            .foregroundColor(ColorTheme.textPrimary)
+                            .foregroundColor(ColorTheme.dynamicTextPrimary(colorScheme: colorScheme))
 
                         if debt.originalAmount > 0 {
                             Text("\(Int(debt.progress * 100))% paid")
@@ -44,6 +46,7 @@ struct DebtCardView: View {
                 ProgressView(value: debt.progress)
                     .progressViewStyle(LinearProgressViewStyle(tint: ColorTheme.color(for: debt.color)))
                     .scaleEffect(x: 1, y: 2, anchor: .center)
+                    .accessibilityValue("\(Int(debt.progress * 100)) percent paid")
 
                 if let dueDate = debt.dueDate {
                     HStack {
@@ -52,17 +55,25 @@ struct DebtCardView: View {
                         Text("Due: \(dueDate, style: .date)")
                             .font(.caption)
                     }
-                    .foregroundColor(ColorTheme.textSecondary)
+                    .foregroundColor(ColorTheme.dynamicTextSecondary(colorScheme: colorScheme))
                 }
             }
             .padding(20)
             .background(
                 RoundedRectangle(cornerRadius: 20)
-                    .fill(Color.white)
-                    .shadow(color: ColorTheme.color(for: debt.color).opacity(0.3), radius: 10, x: 0, y: 5)
+                    .fill(ColorTheme.dynamicCardBackground(colorScheme: colorScheme))
+                    .shadow(
+                        color: ColorTheme.color(for: debt.color).opacity(colorScheme == .dark ? 0.2 : 0.3),
+                        radius: 10,
+                        x: 0,
+                        y: 5
+                    )
             )
         }
         .buttonStyle(ScaleButtonStyle())
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(debt.name), \(debt.category), \(currencyManager.format(debt.currentAmount)) remaining, \(Int(debt.progress * 100)) percent paid")
+        .accessibilityHint("Double tap to make a payment")
     }
 }
 
@@ -79,17 +90,20 @@ struct DebtSummaryCard: View {
     let debtsCount: Int
     let totalPaid: Double
     @StateObject private var currencyManager = CurrencyManager.shared
+    @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
         VStack(spacing: 20) {
             VStack(spacing: 8) {
                 Text("Total Debt")
                     .font(.subheadline)
-                    .foregroundColor(ColorTheme.textSecondary)
+                    .foregroundColor(ColorTheme.dynamicTextSecondary(colorScheme: colorScheme))
 
                 Text(currencyManager.format(totalDebt))
                     .font(.system(size: 48, weight: .bold, design: .rounded))
-                    .foregroundColor(ColorTheme.textPrimary)
+                    .foregroundColor(ColorTheme.dynamicTextPrimary(colorScheme: colorScheme))
+                    .minimumScaleFactor(0.8)
+                    .lineLimit(1)
             }
 
             HStack(spacing: 30) {
@@ -101,21 +115,24 @@ struct DebtSummaryCard: View {
 
                     Text("Active Debts")
                         .font(.caption)
-                        .foregroundColor(ColorTheme.textSecondary)
+                        .foregroundColor(ColorTheme.dynamicTextSecondary(colorScheme: colorScheme))
                 }
 
                 Divider()
                     .frame(height: 40)
+                    .background(ColorTheme.dynamicTextSecondary(colorScheme: colorScheme).opacity(0.3))
 
                 VStack(spacing: 4) {
                     Text(currencyManager.format(totalPaid))
                         .font(.title2)
                         .fontWeight(.bold)
                         .foregroundColor(ColorTheme.success)
+                        .minimumScaleFactor(0.8)
+                        .lineLimit(1)
 
                     Text("Total Paid")
                         .font(.caption)
-                        .foregroundColor(ColorTheme.textSecondary)
+                        .foregroundColor(ColorTheme.dynamicTextSecondary(colorScheme: colorScheme))
                 }
             }
         }
@@ -125,7 +142,9 @@ struct DebtSummaryCard: View {
             RoundedRectangle(cornerRadius: 30)
                 .fill(
                     LinearGradient(
-                        colors: [ColorTheme.pink.opacity(0.3), ColorTheme.purple.opacity(0.3)],
+                        colors: colorScheme == .dark
+                            ? [ColorTheme.pink.opacity(0.2), ColorTheme.purple.opacity(0.2)]
+                            : [ColorTheme.pink.opacity(0.3), ColorTheme.purple.opacity(0.3)],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
                     )
@@ -133,7 +152,18 @@ struct DebtSummaryCard: View {
         )
         .overlay(
             RoundedRectangle(cornerRadius: 30)
-                .stroke(Color.white, lineWidth: 2)
+                .stroke(
+                    colorScheme == .dark
+                        ? ColorTheme.pink.opacity(0.3)
+                        : Color.white,
+                    lineWidth: 2
+                )
+        )
+        .shadow(
+            color: ColorTheme.dynamicShadow(colorScheme: colorScheme),
+            radius: 10,
+            x: 0,
+            y: 5
         )
     }
 }

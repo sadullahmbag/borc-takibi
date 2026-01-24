@@ -3,12 +3,17 @@ import SwiftData
 
 struct DashboardView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.colorScheme) private var colorScheme
     @Query(sort: \Debt.createdDate, order: .reverse) private var debts: [Debt]
     @Query private var userProgressList: [UserProgress]
+    @StateObject private var accessibilityManager = AccessibilityManager.shared
 
     @State private var showAddDebt = false
     @State private var selectedDebt: Debt?
     @State private var showPayment = false
+    @State private var isRefreshing = false
+    @State private var showDeleteConfirmation = false
+    @State private var debtToDelete: Debt?
 
     private var activeDebts: [Debt] {
         debts.filter { !$0.isCompleted }
@@ -29,7 +34,8 @@ struct DashboardView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                ColorTheme.background.ignoresSafeArea()
+                ColorTheme.dynamicBackground(colorScheme: colorScheme)
+                    .ignoresSafeArea()
 
                 ScrollView {
                     VStack(spacing: 24) {
@@ -41,15 +47,22 @@ struct DashboardView: View {
                             totalPaid: totalPaid
                         )
                         .padding(.horizontal)
+                        .accessibilityElement(children: .combine)
+                        .accessibilityLabel("Total debt summary")
 
                         if let progress = userProgress {
                             progressBanner(progress: progress)
                                 .padding(.horizontal)
+                                .accessibilityElement(children: .combine)
+                                .accessibilityLabel("Level \(progress.level) progress")
                         }
 
                         debtsListSection
                     }
                     .padding(.vertical)
+                }
+                .pullToRefresh {
+                    await refreshData()
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
@@ -61,6 +74,7 @@ struct DashboardView: View {
                             .fontWeight(.bold)
                             .foregroundStyle(ColorTheme.gradient1)
                     }
+                    .accessibilityAddTraits(.isHeader)
                 }
 
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -71,7 +85,9 @@ struct DashboardView: View {
                         Image(systemName: "plus.circle.fill")
                             .font(.title2)
                             .foregroundStyle(ColorTheme.gradient1)
+                            .symbolEffect(.bounce, value: showAddDebt)
                     }
+                    .accessibilityLabel("Add new debt")
                 }
             }
             .sheet(isPresented: $showAddDebt) {
@@ -80,7 +96,36 @@ struct DashboardView: View {
             .sheet(item: $selectedDebt) { debt in
                 PaymentView(debt: debt)
             }
+            .alert("Delete Debt?", isPresented: $showDeleteConfirmation) {
+                Button("Cancel", role: .cancel) {
+                    debtToDelete = nil
+                }
+                Button("Delete", role: .destructive) {
+                    if let debt = debtToDelete {
+                        deleteDebt(debt)
+                    }
+                }
+            } message: {
+                if let debt = debtToDelete {
+                    Text("Are you sure you want to delete \"\(debt.name)\"? This action cannot be undone.")
+                }
+            }
         }
+    }
+
+    private func refreshData() async {
+        isRefreshing = true
+        HapticManager.shared.light()
+        try? await Task.sleep(nanoseconds: 500_000_000)
+        isRefreshing = false
+    }
+
+    private func deleteDebt(_ debt: Debt) {
+        withAnimation(.spring(response: 0.5, dampingFraction: 0.8)) {
+            modelContext.delete(debt)
+            HapticManager.shared.success()
+        }
+        debtToDelete = nil
     }
 
     private var headerSection: some View {
@@ -120,19 +165,22 @@ struct DashboardView: View {
                         .foregroundColor(.white.opacity(0.9))
                 }
             }
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel("Level \(progress.level)")
 
             VStack(alignment: .leading, spacing: 4) {
                 Text("Level \(progress.level)")
                     .font(.headline)
-                    .foregroundColor(ColorTheme.textPrimary)
+                    .foregroundColor(ColorTheme.dynamicTextPrimary(colorScheme: colorScheme))
 
                 ProgressView(value: progress.currentLevelProgress)
                     .progressViewStyle(LinearProgressViewStyle(tint: ColorTheme.blue))
                     .scaleEffect(x: 1, y: 1.5, anchor: .center)
+                    .accessibilityValue("\(Int(progress.currentLevelProgress * 100)) percent")
 
                 Text("\(progress.experience) / \(progress.experienceToNextLevel) XP")
                     .font(.caption)
-                    .foregroundColor(ColorTheme.textSecondary)
+                    .foregroundColor(ColorTheme.dynamicTextSecondary(colorScheme: colorScheme))
             }
 
             Spacer()
@@ -146,11 +194,19 @@ struct DashboardView: View {
                         .font(.headline)
                         .foregroundColor(ColorTheme.orange)
                 }
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("\(progress.currentStreak) day streak")
             }
         }
         .padding(20)
-        .background(Color.white)
+        .background(ColorTheme.dynamicCardBackground(colorScheme: colorScheme))
         .cornerRadius(20)
+        .shadow(
+            color: ColorTheme.dynamicShadow(colorScheme: colorScheme),
+            radius: 8,
+            x: 0,
+            y: 4
+        )
     }
 
     private var debtsListSection: some View {
@@ -159,7 +215,7 @@ struct DashboardView: View {
                 Text("Your Debts")
                     .font(.title2)
                     .fontWeight(.bold)
-                    .foregroundColor(ColorTheme.textPrimary)
+                    .foregroundColor(ColorTheme.dynamicTextPrimary(colorScheme: colorScheme))
 
                 Spacer()
 
@@ -175,16 +231,51 @@ struct DashboardView: View {
                 }
             }
             .padding(.horizontal)
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel("Your debts, \(activeDebts.count) active")
 
             if activeDebts.isEmpty {
                 emptyStateView
             } else {
-                ForEach(activeDebts) { debt in
-                    DebtCardView(debt: debt) {
-                        selectedDebt = debt
+                ForEach(activeDebts.indices, id: \.self) { index in
+                    DebtCardView(debt: activeDebts[index]) {
+                        selectedDebt = activeDebts[index]
                         showPayment = true
                     }
                     .padding(.horizontal)
+                    .transition(
+                        accessibilityManager.reduceMotion
+                            ? .opacity
+                            : .asymmetric(
+                                insertion: .scale.combined(with: .opacity),
+                                removal: .scale.combined(with: .opacity)
+                            )
+                    )
+                    .swipeToDelete {
+                        debtToDelete = activeDebts[index]
+                        showDeleteConfirmation = true
+                    }
+                    .longPressMenu {
+                        Button(action: {
+                            selectedDebt = activeDebts[index]
+                            showPayment = true
+                        }) {
+                            Label("Make Payment", systemImage: "dollarsign.circle")
+                        }
+
+                        Button(role: .destructive, action: {
+                            debtToDelete = activeDebts[index]
+                            showDeleteConfirmation = true
+                        }) {
+                            Label("Delete", systemImage: "trash")
+                        }
+                    }
+                    .animation(
+                        accessibilityManager.reduceMotion
+                            ? .none
+                            : .spring(response: 0.5, dampingFraction: 0.8),
+                        value: activeDebts.count
+                    )
                 }
             }
 

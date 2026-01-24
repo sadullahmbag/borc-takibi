@@ -3,8 +3,10 @@ import SwiftData
 
 struct SettingsView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.colorScheme) private var colorScheme
     @Query private var settingsList: [AppSettings]
     @StateObject private var currencyManager = CurrencyManager.shared
+    @StateObject private var themeManager = ThemeManager.shared
 
     @State private var showCurrencyPicker = false
     @State private var selectedCurrency: Currency
@@ -27,6 +29,8 @@ struct SettingsView: View {
                         headerSection
 
                         currencySection
+
+                        themeSection
 
                         preferencesSection
 
@@ -126,6 +130,69 @@ struct SettingsView: View {
                 .background(Color.white)
                 .cornerRadius(15)
             }
+        }
+    }
+
+    private var themeSection: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Appearance")
+                .font(.headline)
+                .foregroundColor(ColorTheme.dynamicTextPrimary(colorScheme: colorScheme))
+                .padding(.horizontal, 4)
+
+            VStack(spacing: 12) {
+                ForEach(AppTheme.allCases) { theme in
+                    Button(action: {
+                        themeManager.currentTheme = theme
+                        HapticManager.shared.light()
+                    }) {
+                        HStack {
+                            Image(systemName: themeIcon(for: theme))
+                                .font(.title3)
+                                .foregroundColor(ColorTheme.dynamicTextPrimary(colorScheme: colorScheme))
+                                .frame(width: 30)
+
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(theme.rawValue)
+                                    .font(.headline)
+                                    .foregroundColor(ColorTheme.dynamicTextPrimary(colorScheme: colorScheme))
+
+                                Text(themeDescription(for: theme))
+                                    .font(.caption)
+                                    .foregroundColor(ColorTheme.dynamicTextSecondary(colorScheme: colorScheme))
+                            }
+
+                            Spacer()
+
+                            if themeManager.currentTheme == theme {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundColor(ColorTheme.success)
+                                    .font(.title3)
+                            }
+                        }
+                        .padding(16)
+                        .background(ColorTheme.dynamicCardBackground(colorScheme: colorScheme))
+                        .cornerRadius(12)
+                    }
+                    .bouncyPress()
+                }
+            }
+        }
+    }
+
+    private func themeIcon(for theme: AppTheme) -> String {
+        switch theme {
+        case .light: return "sun.max.fill"
+        case .dark: return "moon.fill"
+        case .system: return "circle.lefthalf.filled"
+        }
+    }
+
+    private func themeDescription(for theme: AppTheme) -> String {
+        switch theme {
+        case .light: return "Light mode always"
+        case .dark: return "Dark mode always"
+        case .system: return "Matches system settings"
         }
     }
 
