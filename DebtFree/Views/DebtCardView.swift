@@ -3,6 +3,7 @@ import SwiftUI
 struct DebtCardView: View {
     let debt: Debt
     let onTap: () -> Void
+    @StateObject private var currencyManager = CurrencyManager.shared
 
     var body: some View {
         Button(action: {
@@ -27,7 +28,7 @@ struct DebtCardView: View {
                     Spacer()
 
                     VStack(alignment: .trailing, spacing: 4) {
-                        Text("$\(debt.currentAmount, specifier: "%.2f")")
+                        Text(currencyManager.format(debt.currentAmount))
                             .font(.title3)
                             .fontWeight(.bold)
                             .foregroundColor(ColorTheme.textPrimary)
@@ -77,6 +78,7 @@ struct DebtSummaryCard: View {
     let totalDebt: Double
     let debtsCount: Int
     let totalPaid: Double
+    @StateObject private var currencyManager = CurrencyManager.shared
 
     var body: some View {
         VStack(spacing: 20) {
@@ -85,7 +87,7 @@ struct DebtSummaryCard: View {
                     .font(.subheadline)
                     .foregroundColor(ColorTheme.textSecondary)
 
-                Text("$\(totalDebt, specifier: "%.2f")")
+                Text(currencyManager.format(totalDebt))
                     .font(.system(size: 48, weight: .bold, design: .rounded))
                     .foregroundColor(ColorTheme.textPrimary)
             }
@@ -106,7 +108,7 @@ struct DebtSummaryCard: View {
                     .frame(height: 40)
 
                 VStack(spacing: 4) {
-                    Text("$\(totalPaid, specifier: "%.0f")")
+                    Text(currencyManager.format(totalPaid))
                         .font(.title2)
                         .fontWeight(.bold)
                         .foregroundColor(ColorTheme.success)

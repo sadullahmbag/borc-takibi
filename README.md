@@ -11,6 +11,8 @@ A beautiful, gamified iOS debt tracking application built with SwiftUI and Swift
 - **Category System**: Pre-defined categories (Credit Card, Student Loan, Car Loan, Mortgage, etc.)
 - **Custom Emoji Icons**: Choose from 20+ emojis to personalize each debt
 - **Color Themes**: 8 soft, pastel color options for each debt
+- **Multi-Currency Support**: Support for 20+ currencies including USD, EUR, GBP, TRY, JPY, and more
+- **Settings**: Customizable preferences for celebrations, haptics, and notifications
 
 ### Gamification System 🎮
 - **Level System**: Gain experience (XP) with every payment and level up
@@ -24,7 +26,8 @@ A beautiful, gamified iOS debt tracking application built with SwiftUI and Swift
 - **Smooth Animations**: Spring animations and transitions throughout
 - **Haptic Feedback**: Tactile responses for all interactions
 - **Card-Based UI**: Modern, clean card design for all elements
-- **Tab Navigation**: Easy switching between Dashboard and Progress views
+- **Tab Navigation**: Easy switching between Dashboard, Progress, and Settings views
+- **Currency Localization**: Display amounts in your preferred currency with proper formatting
 
 ## App Architecture 🏗️
 
@@ -39,7 +42,9 @@ DebtFree/
 ├── Models/
 │   ├── Debt.swift           # Debt data model
 │   ├── Payment.swift        # Payment history model
-│   └── UserProgress.swift   # Gamification progress model
+│   ├── UserProgress.swift   # Gamification progress model
+│   ├── Currency.swift       # Currency model and manager
+│   └── AppSettings.swift    # App settings model
 ├── Views/
 │   ├── ContentView.swift    # Main tab view
 │   ├── DashboardView.swift  # Home screen with debt list
@@ -47,7 +52,8 @@ DebtFree/
 │   ├── AddDebtView.swift    # Add/edit debt screen
 │   ├── PaymentView.swift    # Payment screen with celebrations
 │   ├── ConfettiView.swift   # Confetti animation component
-│   └── AchievementsView.swift # Progress & achievements screen
+│   ├── AchievementsView.swift # Progress & achievements screen
+│   └── SettingsView.swift   # Settings and preferences screen
 ├── Utilities/
 │   ├── ColorTheme.swift     # App color palette
 │   └── HapticManager.swift  # Haptic feedback manager
@@ -80,13 +86,26 @@ DebtFree/
 ### 4. Achievements & Progress
 - **Profile Circle**: Circular level indicator with XP progress bar
 - **Stats Grid**: Four stat cards showing key metrics
-  - Total Paid
+  - Total Paid (in selected currency)
   - Debts Completed
   - Current Streak
   - Longest Streak
 - **Achievement Grid**: Visual grid of all 10 achievements
   - Unlocked achievements are full color
   - Locked achievements are grayed out
+
+### 5. Settings
+- **Currency Selection**: Choose from 20+ global currencies
+  - USD ($), EUR (€), GBP (£), TRY (₺), JPY (¥), CNY (¥)
+  - INR (₹), RUB (₽), BRL (R$), CAD (C$), AUD (A$)
+  - CHF (Fr), KRW (₩), MXN (Mex$), SEK (kr), NOK (kr)
+  - SAR (﷼), AED (د.إ), ZAR (R), SGD (S$)
+  - Searchable currency picker with symbols and codes
+- **Preferences**:
+  - Toggle celebrations on/off
+  - Enable/disable haptic feedback
+  - Notification preferences
+- **About Section**: App version and credits
 
 ## Gamification Details 🏆
 
@@ -182,6 +201,13 @@ The app uses a soft, pastel color scheme designed to be calming and non-stressfu
 3. Check your stats (total paid, debts completed, streaks)
 4. Browse locked and unlocked achievements
 
+### Changing Currency
+1. Tap the **Settings** tab at the bottom
+2. Tap on **Preferred Currency**
+3. Search or browse through 20+ currencies
+4. Select your preferred currency
+5. All amounts throughout the app will update automatically
+
 ## Technical Highlights 💻
 
 ### SwiftData Integration
@@ -205,6 +231,8 @@ The app uses a soft, pastel color scheme designed to be calming and non-stressfu
 ## Future Enhancements 🔮
 
 Potential features for future versions:
+- [x] Multi-currency support (20+ currencies) ✅
+- [x] Settings and preferences ✅
 - [ ] iCloud sync across devices
 - [ ] Widget support for home screen
 - [ ] Payment reminders and notifications

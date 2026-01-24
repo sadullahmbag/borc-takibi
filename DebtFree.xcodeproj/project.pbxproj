@@ -22,6 +22,9 @@
 		A10000001234567890000019 /* AchievementsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000000123456789000001A /* AchievementsView.swift */; };
 		A1000000123456789000001B /* ColorTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000000123456789000001C /* ColorTheme.swift */; };
 		A1000000123456789000001D /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000000123456789000001E /* HapticManager.swift */; };
+		A10000001234567890000032 /* Currency.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000001234567890000033 /* Currency.swift */; };
+		A10000001234567890000034 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000001234567890000035 /* AppSettings.swift */; };
+		A10000001234567890000036 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000001234567890000037 /* SettingsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,6 +44,9 @@
 		A1000000123456789000001C /* ColorTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorTheme.swift; sourceTree = "<group>"; };
 		A1000000123456789000001E /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
 		A1000000123456789000001F /* DebtFree.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DebtFree.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A10000001234567890000033 /* Currency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Currency.swift; sourceTree = "<group>"; };
+		A10000001234567890000035 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
+		A10000001234567890000037 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,6 +95,8 @@
 				A1000000123456789000000A /* Debt.swift */,
 				A1000000123456789000000C /* Payment.swift */,
 				A1000000123456789000000E /* UserProgress.swift */,
+				A10000001234567890000033 /* Currency.swift */,
+				A10000001234567890000035 /* AppSettings.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -103,6 +111,7 @@
 				A10000001234567890000016 /* PaymentView.swift */,
 				A10000001234567890000018 /* ConfettiView.swift */,
 				A1000000123456789000001A /* AchievementsView.swift */,
+				A10000001234567890000037 /* SettingsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -207,6 +216,9 @@
 				A10000001234567890000019 /* AchievementsView.swift in Sources */,
 				A1000000123456789000001B /* ColorTheme.swift in Sources */,
 				A1000000123456789000001D /* HapticManager.swift in Sources */,
+				A10000001234567890000032 /* Currency.swift in Sources */,
+				A10000001234567890000034 /* AppSettings.swift in Sources */,
+				A10000001234567890000036 /* SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

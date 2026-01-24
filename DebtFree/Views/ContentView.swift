@@ -17,6 +17,12 @@ struct ContentView: View {
                     Label("Progress", systemImage: "trophy.fill")
                 }
                 .tag(1)
+
+            SettingsView()
+                .tabItem {
+                    Label("Settings", systemImage: "gearshape.fill")
+                }
+                .tag(2)
         }
         .tint(ColorTheme.pink)
         .onAppear {

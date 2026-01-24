@@ -7,6 +7,7 @@ struct PaymentView: View {
 
     @Bindable var debt: Debt
     @Query private var userProgressList: [UserProgress]
+    @StateObject private var currencyManager = CurrencyManager.shared
 
     @State private var paymentAmount: String = ""
     @State private var paymentNote: String = ""
@@ -81,7 +82,7 @@ struct PaymentView: View {
                     .font(.caption)
                     .foregroundColor(ColorTheme.textSecondary)
 
-                Text("$\(debt.currentAmount, specifier: "%.2f")")
+                Text(currencyManager.format(debt.currentAmount))
                     .font(.system(size: 36, weight: .bold, design: .rounded))
                     .foregroundColor(ColorTheme.color(for: debt.color))
             }
@@ -107,7 +108,7 @@ struct PaymentView: View {
                 .foregroundColor(ColorTheme.textPrimary)
 
             HStack {
-                Text("$")
+                Text(currencyManager.selectedCurrency.symbol)
                     .font(.title2)
                     .foregroundColor(ColorTheme.textSecondary)
 
@@ -213,7 +214,7 @@ struct PaymentView: View {
 
     private func celebratePayment(amount: Double) {
         celebrationEmoji = "🎉"
-        celebrationMessage = "Great job!\nYou paid $\(String(format: "%.2f", amount))"
+        celebrationMessage = "Great job!\nYou paid \(currencyManager.format(amount))"
         showCelebration = true
     }
 
@@ -238,13 +239,14 @@ struct PaymentView: View {
 struct QuickAmountButton: View {
     let amount: Double
     let action: () -> Void
+    @StateObject private var currencyManager = CurrencyManager.shared
 
     var body: some View {
         Button(action: {
             HapticManager.shared.light()
             action()
         }) {
-            Text("$\(Int(amount))")
+            Text("\(currencyManager.selectedCurrency.symbol)\(Int(amount))")
                 .font(.headline)
                 .foregroundColor(ColorTheme.textPrimary)
                 .frame(maxWidth: .infinity)

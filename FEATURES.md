@@ -40,6 +40,8 @@ DebtFree reimagines debt tracking with:
 - **SwiftUI**: 100% native iOS interface
 - **iOS 17+**: Built for the latest platform
 - **Performance**: Optimized for smooth 60fps experience
+- **Multi-Currency**: Support for 20+ global currencies
+- **Settings**: Customizable app preferences
 
 ## User Journey
 

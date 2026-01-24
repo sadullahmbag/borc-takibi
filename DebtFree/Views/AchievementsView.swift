@@ -3,6 +3,7 @@ import SwiftData
 
 struct AchievementsView: View {
     @Query private var userProgressList: [UserProgress]
+    @StateObject private var currencyManager = CurrencyManager.shared
 
     private var userProgress: UserProgress? {
         userProgressList.first
@@ -73,7 +74,7 @@ struct AchievementsView: View {
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
                 StatCard(
                     title: "Total Paid",
-                    value: "$\(String(format: "%.0f", progress.totalPaid))",
+                    value: currencyManager.format(progress.totalPaid),
                     color: ColorTheme.success,
                     icon: "dollarsign.circle.fill"
                 )
