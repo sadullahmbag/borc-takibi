@@ -28,6 +28,12 @@
 		A10000001234567890000038 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000001234567890000039 /* OnboardingView.swift */; };
 		A1000000123456789000003A /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000000123456789000003B /* ThemeManager.swift */; };
 		A1000000123456789000003C /* GestureExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000000123456789000003D /* GestureExtensions.swift */; };
+		A1111111133557799111113F /* Goal.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000000123456789000003E /* Goal.swift */; };
+		A11111111335577991111151 /* Challenge.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000001234567890000040 /* Challenge.swift */; };
+		A11111111335577991111153 /* AnimationEffects.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000001234567890000042 /* AnimationEffects.swift */; };
+		A11111111335577991111155 /* ProgressDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000001234567890000044 /* ProgressDashboardView.swift */; };
+		A11111111335577991111157 /* GoalsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000001234567890000046 /* GoalsView.swift */; };
+		A11111111335577991111159 /* GamificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000001234567890000048 /* GamificationView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -53,6 +59,12 @@
 		A10000001234567890000039 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		A1000000123456789000003B /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
 		A1000000123456789000003D /* GestureExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GestureExtensions.swift; sourceTree = "<group>"; };
+		A1000000123456789000003E /* Goal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Goal.swift; sourceTree = "<group>"; };
+		A10000001234567890000040 /* Challenge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Challenge.swift; sourceTree = "<group>"; };
+		A10000001234567890000042 /* AnimationEffects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationEffects.swift; sourceTree = "<group>"; };
+		A10000001234567890000044 /* ProgressDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressDashboardView.swift; sourceTree = "<group>"; };
+		A10000001234567890000046 /* GoalsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalsView.swift; sourceTree = "<group>"; };
+		A10000001234567890000048 /* GamificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamificationView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +115,8 @@
 				A1000000123456789000000E /* UserProgress.swift */,
 				A10000001234567890000033 /* Currency.swift */,
 				A10000001234567890000035 /* AppSettings.swift */,
+				A1000000123456789000003E /* Goal.swift */,
+				A10000001234567890000040 /* Challenge.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -119,6 +133,9 @@
 				A1000000123456789000001A /* AchievementsView.swift */,
 				A10000001234567890000037 /* SettingsView.swift */,
 				A10000001234567890000039 /* OnboardingView.swift */,
+				A10000001234567890000044 /* ProgressDashboardView.swift */,
+				A10000001234567890000046 /* GoalsView.swift */,
+				A10000001234567890000048 /* GamificationView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -130,6 +147,7 @@
 				A1000000123456789000001E /* HapticManager.swift */,
 				A1000000123456789000003B /* ThemeManager.swift */,
 				A1000000123456789000003D /* GestureExtensions.swift */,
+				A10000001234567890000042 /* AnimationEffects.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -231,6 +249,12 @@
 				A10000001234567890000038 /* OnboardingView.swift in Sources */,
 				A1000000123456789000003A /* ThemeManager.swift in Sources */,
 				A1000000123456789000003C /* GestureExtensions.swift in Sources */,
+				A1111111133557799111113F /* Goal.swift in Sources */,
+				A11111111335577991111151 /* Challenge.swift in Sources */,
+				A11111111335577991111153 /* AnimationEffects.swift in Sources */,
+				A11111111335577991111155 /* ProgressDashboardView.swift in Sources */,
+				A11111111335577991111157 /* GoalsView.swift in Sources */,
+				A11111111335577991111159 /* GamificationView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
