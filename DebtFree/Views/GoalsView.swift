@@ -173,12 +173,12 @@ struct GoalsView: View {
                         )
                     }
 
-                    // Suggestion: Focus on High Interest
-                    if let highInterestDebt = debts.filter({ !$0.isCompleted && $0.category == .highInterest }).first {
+                    // Suggestion: Focus on Credit Card (typically high interest)
+                    if let creditCardDebt = debts.filter({ !$0.isCompleted && $0.category == "Credit Card" }).first {
                         SmartSuggestionCard(
                             icon: "exclamationmark.triangle.fill",
-                            title: "Pay High Interest First",
-                            description: "Focus on \(highInterestDebt.name) to save money on interest",
+                            title: "Pay Credit Card First",
+                            description: "Focus on \(creditCardDebt.name) to save on interest",
                             action: {
                                 // Navigate to debt detail
                             }
