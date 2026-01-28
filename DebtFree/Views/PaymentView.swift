@@ -7,6 +7,7 @@ struct PaymentView: View {
 
     @Bindable var debt: Debt
     @Query private var userProgressList: [UserProgress]
+    @Query private var goals: [Goal]
     @StateObject private var currencyManager = CurrencyManager.shared
 
     @State private var paymentAmount: String = ""
@@ -204,6 +205,7 @@ struct PaymentView: View {
         }
 
         checkForAchievements()
+        updateGoals(paymentAmount: actualPayment)
 
         HapticManager.shared.celebration()
 
@@ -232,6 +234,12 @@ struct PaymentView: View {
                 newAchievement = achievement.title
                 showAchievement = true
             }
+        }
+    }
+
+    private func updateGoals(paymentAmount: Double) {
+        for goal in goals where !goal.isCompleted {
+            goal.addProgress(amount: paymentAmount)
         }
     }
 }

@@ -18,6 +18,79 @@ struct AchievementsView: View {
                 ScrollView {
                     VStack(spacing: 24) {
                         if let progress = userProgress {
+                            // Quick Links Section
+                            VStack(spacing: 12) {
+                                // Visual Dashboard Link
+                                NavigationLink(destination: ProgressDashboardView()) {
+                                    HStack {
+                                        VStack(alignment: .leading, spacing: 4) {
+                                            Text("Visual Dashboard")
+                                                .font(.headline)
+                                                .fontWeight(.semibold)
+                                                .foregroundColor(ColorTheme.dynamicTextPrimary(colorScheme: colorScheme))
+
+                                            Text("See your progress in beautiful charts")
+                                                .font(.caption)
+                                                .foregroundColor(ColorTheme.dynamicTextSecondary(colorScheme: colorScheme))
+                                        }
+
+                                        Spacer()
+
+                                        Image(systemName: "chart.bar.fill")
+                                            .font(.title2)
+                                            .foregroundColor(ColorTheme.pink)
+                                    }
+                                    .padding()
+                                    .background(
+                                        LinearGradient(
+                                            colors: [ColorTheme.pink.opacity(0.15), ColorTheme.purple.opacity(0.15)],
+                                            startPoint: .leading,
+                                            endPoint: .trailing
+                                        )
+                                    )
+                                    .cornerRadius(20)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 20)
+                                            .stroke(ColorTheme.pink.opacity(0.3), lineWidth: 1)
+                                    )
+                                }
+
+                                // Gamification Link
+                                NavigationLink(destination: GamificationView()) {
+                                    HStack {
+                                        VStack(alignment: .leading, spacing: 4) {
+                                            Text("Challenges & Rewards")
+                                                .font(.headline)
+                                                .fontWeight(.semibold)
+                                                .foregroundColor(ColorTheme.dynamicTextPrimary(colorScheme: colorScheme))
+
+                                            Text("Complete challenges and earn power-ups")
+                                                .font(.caption)
+                                                .foregroundColor(ColorTheme.dynamicTextSecondary(colorScheme: colorScheme))
+                                        }
+
+                                        Spacer()
+
+                                        Image(systemName: "flame.fill")
+                                            .font(.title2)
+                                            .foregroundColor(ColorTheme.orange)
+                                    }
+                                    .padding()
+                                    .background(
+                                        LinearGradient(
+                                            colors: [ColorTheme.orange.opacity(0.15), ColorTheme.yellow.opacity(0.15)],
+                                            startPoint: .leading,
+                                            endPoint: .trailing
+                                        )
+                                    )
+                                    .cornerRadius(20)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 20)
+                                            .stroke(ColorTheme.orange.opacity(0.3), lineWidth: 1)
+                                    )
+                                }
+                            }
+
                             profileSection(progress: progress)
                             statsSection(progress: progress)
                             achievementsSection(progress: progress)

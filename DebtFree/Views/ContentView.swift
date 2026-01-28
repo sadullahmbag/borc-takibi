@@ -16,17 +16,23 @@ struct ContentView: View {
                     }
                     .tag(0)
 
+                GoalsView()
+                    .tabItem {
+                        Label("Goals", systemImage: "target")
+                    }
+                    .tag(1)
+
                 AchievementsView()
                     .tabItem {
                         Label("Progress", systemImage: "trophy.fill")
                     }
-                    .tag(1)
+                    .tag(2)
 
                 SettingsView()
                     .tabItem {
                         Label("Settings", systemImage: "gearshape.fill")
                     }
-                    .tag(2)
+                    .tag(3)
             }
             .tint(ColorTheme.pink)
             .preferredColorScheme(themeManager.currentTheme.colorScheme)
@@ -57,5 +63,5 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
-        .modelContainer(for: [Debt.self, Payment.self, UserProgress.self], inMemory: true)
+        .modelContainer(for: [Debt.self, Payment.self, UserProgress.self, Goal.self], inMemory: true)
 }

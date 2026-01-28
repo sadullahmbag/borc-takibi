@@ -8,7 +8,9 @@ struct DebtFreeApp: App {
             Debt.self,
             Payment.self,
             UserProgress.self,
-            AppSettings.self
+            AppSettings.self,
+            Goal.self,
+            Challenge.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
