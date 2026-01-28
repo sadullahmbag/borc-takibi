@@ -284,7 +284,7 @@ struct ChallengeCard: View {
                         .font(.headline)
                         .foregroundColor(ColorTheme.dynamicTextPrimary(colorScheme: colorScheme))
 
-                    Text(challenge.description)
+                    Text(challenge.details)
                         .font(.caption)
                         .foregroundColor(ColorTheme.dynamicTextSecondary(colorScheme: colorScheme))
 

@@ -13,7 +13,7 @@ struct GoalsView: View {
 
     // Smart calculations
     private var totalDebtRemaining: Double {
-        debts.filter { !$0.isPaid }.reduce(0) { $0 + $1.currentAmount }
+        debts.filter { !$0.isCompleted }.reduce(0) { $0 + $1.currentAmount }
     }
 
     private var averageMonthlyPayment: Double {
@@ -174,7 +174,7 @@ struct GoalsView: View {
                     }
 
                     // Suggestion: Focus on High Interest
-                    if let highInterestDebt = debts.filter({ !$0.isPaid && $0.category == .highInterest }).first {
+                    if let highInterestDebt = debts.filter({ !$0.isCompleted && $0.category == .highInterest }).first {
                         SmartSuggestionCard(
                             icon: "exclamationmark.triangle.fill",
                             title: "Pay High Interest First",

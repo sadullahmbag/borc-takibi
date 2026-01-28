@@ -19,7 +19,7 @@ struct ProgressDashboardView: View {
 
     // Calculate remaining debt
     private var totalRemainingDebt: Double {
-        debts.filter { !$0.isPaid }.reduce(0) { $0 + $1.currentAmount }
+        debts.filter { !$0.isCompleted }.reduce(0) { $0 + $1.currentAmount }
     }
 
     // Calculate overall progress
@@ -215,8 +215,8 @@ struct ProgressDashboardView: View {
 
                 MilestoneRow(
                     title: "First Debt Paid Off",
-                    isCompleted: debts.contains(where: { $0.isPaid }),
-                    date: debts.filter({ $0.isPaid }).first?.updatedAt
+                    isCompleted: debts.contains(where: { $0.isCompleted }),
+                    date: debts.contains(where: { $0.isCompleted }) ? Date() : nil
                 )
 
                 MilestoneRow(
@@ -307,7 +307,7 @@ struct ProgressDashboardView: View {
                             .fontWeight(.bold)
                             .foregroundColor(ColorTheme.dynamicTextPrimary(colorScheme: colorScheme))
 
-                        Text("\(debts.filter { !$0.isPaid }.count) debts left")
+                        Text("\(debts.filter { !$0.isCompleted }.count) debts left")
                             .font(.caption)
                             .foregroundColor(ColorTheme.dynamicTextSecondary(colorScheme: colorScheme))
                     }

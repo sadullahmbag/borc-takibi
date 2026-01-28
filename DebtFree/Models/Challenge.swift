@@ -5,7 +5,7 @@ import SwiftData
 final class Challenge {
     var id: UUID
     var title: String
-    var description: String
+    var details: String
     var type: ChallengeType
     var targetValue: Double
     var currentValue: Double
@@ -25,10 +25,10 @@ final class Challenge {
         return max(hours, 0)
     }
 
-    init(title: String, description: String, type: ChallengeType, targetValue: Double, expiresAt: Date, reward: ChallengeReward, emoji: String) {
+    init(title: String, details: String, type: ChallengeType, targetValue: Double, expiresAt: Date, reward: ChallengeReward, emoji: String) {
         self.id = UUID()
         self.title = title
-        self.description = description
+        self.details = details
         self.type = type
         self.targetValue = targetValue
         self.currentValue = 0
@@ -73,7 +73,7 @@ struct ChallengeReward: Codable {
 // MARK: - Challenge Generator
 struct ChallengeGenerator {
     static func generateDailyChallenge() -> Challenge {
-        let challenges: [(title: String, description: String, target: Double, emoji: String)] = [
+        let challenges: [(title: String, details: String, target: Double, emoji: String)] = [
             ("Payment Warrior", "Make a payment today", 1, "⚔️"),
             ("Double Up", "Pay twice today", 2, "💪"),
             ("Review Master", "Review all your debts", 1, "👀"),
@@ -86,7 +86,7 @@ struct ChallengeGenerator {
 
         return Challenge(
             title: selected.title,
-            description: selected.description,
+            details: selected.details,
             type: .daily,
             targetValue: selected.target,
             expiresAt: tomorrow,
@@ -96,7 +96,7 @@ struct ChallengeGenerator {
     }
 
     static func generateWeeklyChallenge() -> Challenge {
-        let challenges: [(title: String, description: String, target: Double, emoji: String)] = [
+        let challenges: [(title: String, details: String, target: Double, emoji: String)] = [
             ("Week Warrior", "Make 5 payments this week", 5, "🔥"),
             ("Debt Crusher", "Pay off a complete debt", 1, "💥"),
             ("Consistency King", "Maintain your streak", 7, "👑"),
@@ -109,7 +109,7 @@ struct ChallengeGenerator {
 
         return Challenge(
             title: selected.title,
-            description: selected.description,
+            details: selected.details,
             type: .weekly,
             targetValue: selected.target,
             expiresAt: nextWeek,
