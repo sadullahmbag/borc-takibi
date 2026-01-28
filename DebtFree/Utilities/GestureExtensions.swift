@@ -77,7 +77,7 @@ extension View {
 // MARK: - Pull to Refresh
 struct PullToRefreshModifier: ViewModifier {
     let coordinateSpaceName: String
-    let onRefresh: @escaping () async -> Void
+    let onRefresh: () async -> Void
 
     @State private var isRefreshing = false
 
