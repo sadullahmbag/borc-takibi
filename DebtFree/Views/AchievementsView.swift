@@ -3,11 +3,13 @@ import SwiftData
 
 struct AchievementsView: View {
     @Query private var userProgressList: [UserProgress]
+    @StateObject private var authManager = AuthManager.shared
     @StateObject private var currencyManager = CurrencyManager.shared
     @Environment(\.colorScheme) private var colorScheme
 
     private var userProgress: UserProgress? {
-        userProgressList.first
+        guard let userId = authManager.userId else { return nil }
+        return userProgressList.first { $0.userId == userId }
     }
 
     var body: some View {

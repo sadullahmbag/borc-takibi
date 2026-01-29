@@ -9,6 +9,7 @@ struct PaymentView: View {
     @Query private var userProgressList: [UserProgress]
     @Query private var goals: [Goal]
     @Query private var challenges: [Challenge]
+    @StateObject private var authManager = AuthManager.shared
     @StateObject private var currencyManager = CurrencyManager.shared
     @StateObject private var popupManager = PopupManager.shared
 
@@ -22,10 +23,15 @@ struct PaymentView: View {
     @State private var isPayingFull: Bool = false
 
     private var userProgress: UserProgress {
-        if let progress = userProgressList.first {
+        guard let userId = authManager.userId else {
+            // Return a temporary instance if no user is logged in
+            return UserProgress(userId: "")
+        }
+
+        if let progress = userProgressList.first(where: { $0.userId == userId }) {
             return progress
         } else {
-            let newProgress = UserProgress()
+            let newProgress = UserProgress(userId: userId)
             modelContext.insert(newProgress)
             return newProgress
         }
@@ -187,10 +193,11 @@ struct PaymentView: View {
 
     private func processPayment() {
         guard let amount = Double(paymentAmount), amount > 0 else { return }
+        guard let userId = authManager.userId else { return }
 
         let actualPayment = min(amount, debt.currentAmount)
 
-        let payment = Payment(amount: actualPayment, note: paymentNote.isEmpty ? nil : paymentNote, debt: debt)
+        let payment = Payment(userId: userId, amount: actualPayment, note: paymentNote.isEmpty ? nil : paymentNote, debt: debt)
         modelContext.insert(payment)
 
         debt.currentAmount -= actualPayment
@@ -253,10 +260,11 @@ struct PaymentView: View {
 
     private func checkForCompletedChallenges() {
         guard let amount = Double(paymentAmount), amount > 0 else { return }
+        guard let userId = authManager.userId else { return }
 
         var completedChallenge: Challenge?
 
-        for challenge in challenges where !challenge.isCompleted && challenge.expiresAt > Date() {
+        for challenge in challenges where challenge.userId == userId && !challenge.isCompleted && challenge.expiresAt > Date() {
             let wasNotCompleted = !challenge.isCompleted
 
             // Add progress for payment-based challenges
@@ -285,7 +293,8 @@ struct PaymentView: View {
     }
 
     private func updateGoals(paymentAmount: Double) {
-        for goal in goals where !goal.isCompleted {
+        guard let userId = authManager.userId else { return }
+        for goal in goals where goal.userId == userId && !goal.isCompleted {
             goal.addProgress(amount: paymentAmount)
         }
     }

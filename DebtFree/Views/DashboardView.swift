@@ -4,6 +4,7 @@ import SwiftData
 struct DashboardView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.colorScheme) private var colorScheme
+    @StateObject private var authManager = AuthManager.shared
     @Query(sort: \Debt.createdDate, order: .reverse) private var debts: [Debt]
     @Query private var userProgressList: [UserProgress]
     @Query private var challenges: [Challenge]
@@ -17,8 +18,13 @@ struct DashboardView: View {
     @State private var showDeleteConfirmation = false
     @State private var debtToDelete: Debt?
 
+    private var filteredDebts: [Debt] {
+        guard let userId = authManager.userId else { return [] }
+        return debts.filter { $0.userId == userId }
+    }
+
     private var activeDebts: [Debt] {
-        debts.filter { !$0.isCompleted }
+        filteredDebts.filter { !$0.isCompleted }
     }
 
     private var totalDebt: Double {
@@ -26,11 +32,17 @@ struct DashboardView: View {
     }
 
     private var totalPaid: Double {
-        debts.reduce(0) { $0 + $1.amountPaid }
+        filteredDebts.reduce(0) { $0 + $1.amountPaid }
     }
 
     private var userProgress: UserProgress? {
-        userProgressList.first
+        guard let userId = authManager.userId else { return nil }
+        return userProgressList.first { $0.userId == userId }
+    }
+
+    private var filteredChallenges: [Challenge] {
+        guard let userId = authManager.userId else { return [] }
+        return challenges.filter { $0.userId == userId }
     }
 
     var body: some View {
@@ -305,7 +317,7 @@ struct DashboardView: View {
                 }
             }
 
-            if !debts.filter({ $0.isCompleted }).isEmpty {
+            if !filteredDebts.filter({ $0.isCompleted }).isEmpty {
                 completedDebtsSection
             }
         }
@@ -352,7 +364,7 @@ struct DashboardView: View {
                 .foregroundColor(ColorTheme.textSecondary)
                 .padding(.horizontal)
 
-            ForEach(debts.filter { $0.isCompleted }) { debt in
+            ForEach(filteredDebts.filter { $0.isCompleted }) { debt in
                 CompletedDebtCard(debt: debt)
                     .padding(.horizontal)
             }

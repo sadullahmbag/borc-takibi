@@ -4,6 +4,7 @@ import SwiftData
 struct AddDebtView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
+    @StateObject private var authManager = AuthManager.shared
 
     @State private var name: String = ""
     @State private var amount: String = ""
@@ -197,8 +198,10 @@ struct AddDebtView: View {
 
     private func saveDebt() {
         guard let debtAmount = Double(amount) else { return }
+        guard let userId = authManager.userId else { return }
 
         let newDebt = Debt(
+            userId: userId,
             name: name,
             amount: debtAmount,
             category: category,

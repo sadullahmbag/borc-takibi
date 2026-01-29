@@ -1,6 +1,8 @@
 import Foundation
 import Supabase
 import SwiftUI
+import AuthenticationServices
+import CryptoKit
 
 @MainActor
 class AuthManager: ObservableObject {
@@ -79,6 +81,33 @@ class AuthManager: ObservableObject {
     // MARK: - Update Password
     func updatePassword(newPassword: String) async throws {
         try await supabase.auth.update(user: UserAttributes(password: newPassword))
+    }
+
+    // MARK: - Apple Sign In
+    func signInWithApple(idToken: String, nonce: String) async throws {
+        let session = try await supabase.auth.signInWithIdToken(
+            credentials: .init(
+                provider: .apple,
+                idToken: idToken,
+                nonce: nonce
+            )
+        )
+
+        self.currentUser = session.user
+        self.isAuthenticated = true
+    }
+
+    // MARK: - Google Sign In
+    func signInWithGoogle(idToken: String) async throws {
+        let session = try await supabase.auth.signInWithIdToken(
+            credentials: .init(
+                provider: .google,
+                idToken: idToken
+            )
+        )
+
+        self.currentUser = session.user
+        self.isAuthenticated = true
     }
 }
 

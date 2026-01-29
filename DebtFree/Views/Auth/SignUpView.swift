@@ -1,7 +1,9 @@
 import SwiftUI
+import AuthenticationServices
 
 struct SignUpView: View {
     @StateObject private var authManager = AuthManager.shared
+    @StateObject private var appleSignInHelper = AppleSignInHelper()
     @Environment(\.colorScheme) private var colorScheme
 
     @State private var email = ""
@@ -152,6 +154,71 @@ struct SignUpView: View {
                 }
                 .padding(.horizontal)
 
+                // Divider with "Or continue with"
+                HStack {
+                    Rectangle()
+                        .fill(ColorTheme.dynamicTextSecondary(colorScheme: colorScheme).opacity(0.3))
+                        .frame(height: 1)
+
+                    Text("Or continue with".localized)
+                        .font(.caption)
+                        .foregroundColor(ColorTheme.dynamicTextSecondary(colorScheme: colorScheme))
+                        .padding(.horizontal, 12)
+
+                    Rectangle()
+                        .fill(ColorTheme.dynamicTextSecondary(colorScheme: colorScheme).opacity(0.3))
+                        .frame(height: 1)
+                }
+                .padding(.horizontal)
+                .padding(.vertical, 8)
+
+                // Social Sign In Buttons
+                VStack(spacing: 12) {
+                    // Apple Sign In
+                    Button(action: {
+                        signInWithApple()
+                    }) {
+                        HStack {
+                            Image(systemName: "apple.logo")
+                                .font(.title3)
+
+                            Text("Continue with Apple".localized)
+                                .font(.headline)
+                        }
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.black)
+                        .cornerRadius(12)
+                    }
+                    .disabled(isLoading)
+
+                    // Google Sign In (Coming Soon)
+                    Button(action: {
+                        // Google Sign In will be implemented
+                        errorMessage = "Google Sign In coming soon!".localized
+                    }) {
+                        HStack {
+                            Image(systemName: "g.circle.fill")
+                                .font(.title3)
+
+                            Text("Continue with Google".localized)
+                                .font(.headline)
+                        }
+                        .foregroundColor(ColorTheme.dynamicTextPrimary(colorScheme: colorScheme))
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(ColorTheme.dynamicCardBackground(colorScheme: colorScheme))
+                        .cornerRadius(12)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(ColorTheme.purple.opacity(0.3), lineWidth: 1)
+                        )
+                    }
+                    .disabled(isLoading)
+                }
+                .padding(.horizontal)
+
                 // Sign In Link
                 HStack {
                     Text("Already have an account?".localized)
@@ -211,6 +278,31 @@ struct SignUpView: View {
         }
 
         isLoading = false
+    }
+
+    private func signInWithApple() {
+        isLoading = true
+        errorMessage = nil
+
+        appleSignInHelper.signIn(
+            onSuccess: { idToken, nonce in
+                Task {
+                    do {
+                        try await authManager.signInWithApple(idToken: idToken, nonce: nonce)
+                        HapticManager.shared.success()
+                    } catch {
+                        errorMessage = error.localizedDescription
+                        HapticManager.shared.error()
+                    }
+                    isLoading = false
+                }
+            },
+            onError: { error in
+                errorMessage = error.localizedDescription
+                HapticManager.shared.error()
+                isLoading = false
+            }
+        )
     }
 }
 

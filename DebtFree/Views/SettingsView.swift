@@ -15,7 +15,8 @@ struct SettingsView: View {
     @State private var isSigningOut = false
 
     private var settings: AppSettings? {
-        settingsList.first
+        guard let userId = authManager.userId else { return nil }
+        return settingsList.first { $0.userId == userId }
     }
 
     init() {
@@ -60,8 +61,8 @@ struct SettingsView: View {
                     currencyManager.selectedCurrency = selectedCurrency
                     if let appSettings = settings {
                         appSettings.currency = selectedCurrency
-                    } else {
-                        let newSettings = AppSettings()
+                    } else if let userId = authManager.userId {
+                        let newSettings = AppSettings(userId: userId)
                         newSettings.currency = selectedCurrency
                         modelContext.insert(newSettings)
                     }
@@ -366,8 +367,9 @@ struct SettingsView: View {
     }
 
     private func ensureSettingsExist() {
-        if settingsList.isEmpty {
-            let newSettings = AppSettings()
+        guard let userId = authManager.userId else { return }
+        if settingsList.first(where: { $0.userId == userId }) == nil {
+            let newSettings = AppSettings(userId: userId)
             modelContext.insert(newSettings)
         }
     }

@@ -3,17 +3,20 @@ import SwiftData
 
 struct GoalsView: View {
     @Query private var goals: [Goal]
+    @StateObject private var authManager = AuthManager.shared
     @StateObject private var currencyManager = CurrencyManager.shared
     @Environment(\.modelContext) private var modelContext
     @Environment(\.colorScheme) private var colorScheme
     @State private var showAddGoal = false
 
     private var activeGoals: [Goal] {
-        goals.filter { !$0.isCompleted }.sorted { $0.targetDate < $1.targetDate }
+        guard let userId = authManager.userId else { return [] }
+        return goals.filter { $0.userId == userId && !$0.isCompleted }.sorted { $0.targetDate < $1.targetDate }
     }
 
     private var completedGoals: [Goal] {
-        goals.filter { $0.isCompleted }.sorted { ($0.completedAt ?? Date()) > ($1.completedAt ?? Date()) }
+        guard let userId = authManager.userId else { return [] }
+        return goals.filter { $0.userId == userId && $0.isCompleted }.sorted { ($0.completedAt ?? Date()) > ($1.completedAt ?? Date()) }
     }
 
     var body: some View {
@@ -249,6 +252,7 @@ struct AddGoalView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @Environment(\.colorScheme) private var colorScheme
+    @StateObject private var authManager = AuthManager.shared
     @StateObject private var currencyManager = CurrencyManager.shared
 
     @State private var title = ""
@@ -342,8 +346,10 @@ struct AddGoalView: View {
 
     private func saveGoal() {
         guard let amount = Double(targetAmount) else { return }
+        guard let userId = authManager.userId else { return }
 
         let goal = Goal(
+            userId: userId,
             title: title,
             targetAmount: amount,
             targetDate: targetDate,
