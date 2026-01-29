@@ -67,8 +67,8 @@ struct DashboardView: View {
             }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Text("DebtFree")
+                ToolbarItem(placement: .principal) {
+                    Text("Borciva")
                         .font(.title2)
                         .fontWeight(.bold)
                         .foregroundStyle(ColorTheme.gradient1)
