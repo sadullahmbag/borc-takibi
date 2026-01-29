@@ -7,9 +7,12 @@ struct SettingsView: View {
     @Query private var settingsList: [AppSettings]
     @StateObject private var currencyManager = CurrencyManager.shared
     @StateObject private var themeManager = ThemeManager.shared
+    @StateObject private var authManager = AuthManager.shared
 
     @State private var showCurrencyPicker = false
     @State private var selectedCurrency: Currency
+    @State private var showSignOutAlert = false
+    @State private var isSigningOut = false
 
     private var settings: AppSettings? {
         settingsList.first
@@ -33,6 +36,8 @@ struct SettingsView: View {
                         themeSection
 
                         preferencesSection
+
+                        accountSection
 
                         aboutSection
 
@@ -257,6 +262,81 @@ struct SettingsView: View {
         }
     }
 
+    private var accountSection: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Account".localized)
+                .font(.headline)
+                .foregroundColor(ColorTheme.dynamicTextPrimary(colorScheme: colorScheme))
+                .padding(.horizontal, 4)
+
+            VStack(spacing: 12) {
+                // User email
+                if let user = authManager.currentUser {
+                    HStack(spacing: 16) {
+                        Image(systemName: "person.circle.fill")
+                            .font(.title2)
+                            .foregroundColor(ColorTheme.purple)
+                            .frame(width: 40)
+
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Signed in as".localized)
+                                .font(.caption)
+                                .foregroundColor(ColorTheme.dynamicTextSecondary(colorScheme: colorScheme))
+
+                            Text(user.email ?? "No email")
+                                .font(.headline)
+                                .foregroundColor(ColorTheme.dynamicTextPrimary(colorScheme: colorScheme))
+                        }
+
+                        Spacer()
+                    }
+                    .padding(16)
+                    .background(ColorTheme.dynamicCardBackground(colorScheme: colorScheme))
+                    .cornerRadius(12)
+                }
+
+                // Sign out button
+                Button(action: {
+                    showSignOutAlert = true
+                    HapticManager.shared.light()
+                }) {
+                    HStack(spacing: 16) {
+                        Image(systemName: "rectangle.portrait.and.arrow.right")
+                            .font(.title3)
+                            .foregroundColor(.red)
+                            .frame(width: 40)
+
+                        Text("Sign Out".localized)
+                            .font(.headline)
+                            .foregroundColor(.red)
+
+                        Spacer()
+
+                        if isSigningOut {
+                            ProgressView()
+                                .progressViewStyle(CircularProgressViewStyle(tint: .red))
+                        }
+                    }
+                    .padding(16)
+                    .background(ColorTheme.dynamicCardBackground(colorScheme: colorScheme))
+                    .cornerRadius(12)
+                }
+                .disabled(isSigningOut)
+                .bouncyPress()
+            }
+        }
+        .alert("Sign Out".localized, isPresented: $showSignOutAlert) {
+            Button("Cancel".localized, role: .cancel) {}
+            Button("Sign Out".localized, role: .destructive) {
+                Task {
+                    await signOut()
+                }
+            }
+        } message: {
+            Text("Are you sure you want to sign out?".localized)
+        }
+    }
+
     private var aboutSection: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("About")
@@ -290,6 +370,20 @@ struct SettingsView: View {
             let newSettings = AppSettings()
             modelContext.insert(newSettings)
         }
+    }
+
+    private func signOut() async {
+        isSigningOut = true
+
+        do {
+            try await authManager.signOut()
+            HapticManager.shared.success()
+        } catch {
+            print("Error signing out: \(error.localizedDescription)")
+            HapticManager.shared.error()
+        }
+
+        isSigningOut = false
     }
 }
 

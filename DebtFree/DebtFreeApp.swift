@@ -3,6 +3,8 @@ import SwiftData
 
 @main
 struct BorcivaApp: App {
+    @StateObject private var authManager = AuthManager.shared
+
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Debt.self,
@@ -23,8 +25,47 @@ struct BorcivaApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            Group {
+                if authManager.isLoading {
+                    // Loading screen while checking auth status
+                    LoadingView()
+                } else if authManager.isAuthenticated {
+                    // Show main app if authenticated
+                    ContentView()
+                        .modelContainer(sharedModelContainer)
+                } else {
+                    // Show auth screen if not authenticated
+                    AuthView()
+                }
+            }
         }
-        .modelContainer(sharedModelContainer)
+    }
+}
+
+// MARK: - Loading View
+struct LoadingView: View {
+    @Environment(\.colorScheme) private var colorScheme
+
+    var body: some View {
+        ZStack {
+            ColorTheme.dynamicBackground(colorScheme: colorScheme)
+                .ignoresSafeArea()
+
+            VStack(spacing: 20) {
+                Image(systemName: "checkmark.circle.fill")
+                    .font(.system(size: 80))
+                    .foregroundStyle(
+                        LinearGradient(
+                            colors: [ColorTheme.purple, ColorTheme.pink],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+
+                ProgressView()
+                    .progressViewStyle(CircularProgressViewStyle(tint: ColorTheme.purple))
+                    .scaleEffect(1.5)
+            }
+        }
     }
 }
