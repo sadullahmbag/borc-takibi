@@ -4,6 +4,7 @@ import SwiftData
 @Model
 final class UserProgress {
     var id: UUID
+    var userId: String  // User ID from Supabase Auth
     var totalPaid: Double
     var debtsCompleted: Int
     var currentStreak: Int
@@ -22,8 +23,9 @@ final class UserProgress {
         return Double(experience) / Double(experienceToNextLevel)
     }
 
-    init() {
+    init(userId: String) {
         self.id = UUID()
+        self.userId = userId
         self.totalPaid = 0
         self.debtsCompleted = 0
         self.currentStreak = 0

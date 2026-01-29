@@ -4,6 +4,7 @@ import SwiftData
 @Model
 final class Challenge {
     var id: UUID
+    var userId: String  // User ID from Supabase Auth
     var title: String
     var details: String
     var type: ChallengeType
@@ -25,8 +26,9 @@ final class Challenge {
         return max(hours, 0)
     }
 
-    init(title: String, details: String, type: ChallengeType, targetValue: Double, expiresAt: Date, reward: ChallengeReward, emoji: String) {
+    init(userId: String, title: String, details: String, type: ChallengeType, targetValue: Double, expiresAt: Date, reward: ChallengeReward, emoji: String) {
         self.id = UUID()
+        self.userId = userId
         self.title = title
         self.details = details
         self.type = type
@@ -72,7 +74,7 @@ struct ChallengeReward: Codable {
 
 // MARK: - Challenge Generator
 struct ChallengeGenerator {
-    static func generateDailyChallenge() -> Challenge {
+    static func generateDailyChallenge(for userId: String) -> Challenge {
         let challenges: [(title: String, details: String, target: Double, emoji: String)] = [
             ("Payment Warrior", "Make a payment today", 1, "⚔️"),
             ("Double Up", "Pay twice today", 2, "💪"),
@@ -85,6 +87,7 @@ struct ChallengeGenerator {
         let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: Date())!
 
         return Challenge(
+            userId: userId,
             title: selected.title,
             details: selected.details,
             type: .daily,
@@ -95,7 +98,7 @@ struct ChallengeGenerator {
         )
     }
 
-    static func generateWeeklyChallenge() -> Challenge {
+    static func generateWeeklyChallenge(for userId: String) -> Challenge {
         let challenges: [(title: String, details: String, target: Double, emoji: String)] = [
             ("Week Warrior", "Make 5 payments this week", 5, "🔥"),
             ("Debt Crusher", "Pay off a complete debt", 1, "💥"),
@@ -108,6 +111,7 @@ struct ChallengeGenerator {
         let nextWeek = Calendar.current.date(byAdding: .weekOfYear, value: 1, to: Date())!
 
         return Challenge(
+            userId: userId,
             title: selected.title,
             details: selected.details,
             type: .weekly,

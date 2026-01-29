@@ -4,6 +4,7 @@ import SwiftData
 @Model
 final class Goal {
     var id: UUID
+    var userId: String  // User ID from Supabase Auth
     var title: String
     var targetAmount: Double
     var currentAmount: Double
@@ -24,8 +25,9 @@ final class Goal {
         return max(days, 0)
     }
 
-    init(title: String, targetAmount: Double, targetDate: Date, category: GoalCategory = .monthly) {
+    init(userId: String, title: String, targetAmount: Double, targetDate: Date, category: GoalCategory = .monthly) {
         self.id = UUID()
+        self.userId = userId
         self.title = title
         self.targetAmount = targetAmount
         self.currentAmount = 0

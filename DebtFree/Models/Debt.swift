@@ -4,6 +4,7 @@ import SwiftData
 @Model
 final class Debt {
     var id: UUID
+    var userId: String  // User ID from Supabase Auth
     var name: String
     var originalAmount: Double
     var currentAmount: Double
@@ -27,6 +28,7 @@ final class Debt {
     }
 
     init(
+        userId: String,
         name: String,
         amount: Double,
         category: String = "Other",
@@ -36,6 +38,7 @@ final class Debt {
         interestRate: Double? = nil
     ) {
         self.id = UUID()
+        self.userId = userId
         self.name = name
         self.originalAmount = amount
         self.currentAmount = amount

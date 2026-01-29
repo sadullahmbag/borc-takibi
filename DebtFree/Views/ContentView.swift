@@ -5,6 +5,8 @@ struct ContentView: View {
     @State private var selectedTab = 0
     @State private var showOnboarding = !UserDefaults.standard.bool(forKey: "hasCompletedOnboarding")
     @StateObject private var themeManager = ThemeManager.shared
+    @StateObject private var authManager = AuthManager.shared
+    @StateObject private var userManager = UserManager.shared
     @Environment(\.colorScheme) private var systemColorScheme
 
     var body: some View {
@@ -41,6 +43,19 @@ struct ContentView: View {
             }
             .fullScreenCover(isPresented: $showOnboarding) {
                 OnboardingView(showOnboarding: $showOnboarding)
+            }
+            .overlay {
+                if userManager.showWelcomePopup {
+                    WelcomePopup {
+                        userManager.showWelcomePopup = false
+                    }
+                }
+            }
+            .onAppear {
+                // Check if this is a first-time user
+                if let userId = authManager.userId {
+                    userManager.checkFirstTimeUser(userId: userId)
+                }
             }
         }
     }

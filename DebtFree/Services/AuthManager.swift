@@ -12,6 +12,11 @@ class AuthManager: ObservableObject {
 
     private let supabase = SupabaseConfig.shared.client
 
+    // Computed property for easy access to userId
+    var userId: String? {
+        return currentUser?.id.uuidString
+    }
+
     private init() {
         Task {
             await checkAuthStatus()
