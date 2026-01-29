@@ -8,7 +8,9 @@ struct PaymentView: View {
     @Bindable var debt: Debt
     @Query private var userProgressList: [UserProgress]
     @Query private var goals: [Goal]
+    @Query private var challenges: [Challenge]
     @StateObject private var currencyManager = CurrencyManager.shared
+    @StateObject private var popupManager = PopupManager.shared
 
     @State private var paymentAmount: String = ""
     @State private var paymentNote: String = ""
@@ -205,6 +207,7 @@ struct PaymentView: View {
         }
 
         checkForAchievements()
+        checkForCompletedChallenges()
         updateGoals(paymentAmount: actualPayment)
 
         HapticManager.shared.celebration()
@@ -227,12 +230,56 @@ struct PaymentView: View {
     }
 
     private func checkForAchievements() {
+        var newlyUnlockedAchievement: (id: String, title: String, description: String, emoji: String)?
+
         for achievement in UserProgress.achievements {
             if !userProgress.achievementsUnlocked.contains(achievement.id) &&
                achievement.requirement(userProgress) {
                 userProgress.achievementsUnlocked.append(achievement.id)
+                newlyUnlockedAchievement = achievement
                 newAchievement = achievement.title
                 showAchievement = true
+                break // Only show one achievement at a time
+            }
+        }
+
+        // Trigger the popup after dismissing this view
+        if let achievement = newlyUnlockedAchievement {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+                popupManager.showAchievement(achievement)
+            }
+        }
+    }
+
+    private func checkForCompletedChallenges() {
+        guard let amount = Double(paymentAmount), amount > 0 else { return }
+
+        var completedChallenge: Challenge?
+
+        for challenge in challenges where !challenge.isCompleted && challenge.expiresAt > Date() {
+            let wasNotCompleted = !challenge.isCompleted
+
+            // Add progress for payment-based challenges
+            // Most daily challenges are about making "a payment" (target: 1)
+            // Weekly challenges might track payment count or amount
+            if challenge.type == .daily || challenge.type == .weekly {
+                challenge.addProgress(value: 1) // Count this as 1 payment
+            }
+
+            // Check if it just became completed
+            if wasNotCompleted && challenge.isCompleted {
+                completedChallenge = challenge
+                break // Only show one challenge at a time
+            }
+        }
+
+        // Trigger the popup after dismissing this view
+        if let challenge = completedChallenge {
+            // Award XP to user progress
+            userProgress.experience += challenge.reward.xp
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+                popupManager.showChallenge(challenge)
             }
         }
     }

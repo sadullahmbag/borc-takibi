@@ -37,7 +37,7 @@ struct GoalsView: View {
                         // Completed Goals
                         if !completedGoals.isEmpty {
                             VStack(spacing: 12) {
-                                Text("Tamamlananlar")
+                                Text("Completed".localized)
                                     .font(.headline)
                                     .foregroundColor(ColorTheme.dynamicTextSecondary(colorScheme: colorScheme))
                                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -58,7 +58,7 @@ struct GoalsView: View {
                     .padding()
                 }
             }
-            .navigationTitle("Hedefler")
+            .navigationTitle("Goals".localized)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -81,18 +81,18 @@ struct GoalsView: View {
             Text("🎯")
                 .font(.system(size: 60))
 
-            Text("İlk Hedefini Belirle")
+            Text("Set Your First Goal".localized)
                 .font(.title3)
                 .fontWeight(.bold)
                 .foregroundColor(ColorTheme.dynamicTextPrimary(colorScheme: colorScheme))
 
-            Text("Borçlarını ödemek için hedefler koy")
+            Text("Set goals to pay off your debts".localized)
                 .font(.subheadline)
                 .foregroundColor(ColorTheme.dynamicTextSecondary(colorScheme: colorScheme))
                 .multilineTextAlignment(.center)
 
             Button(action: { showAddGoal = true }) {
-                Text("Hedef Ekle")
+                Text("Add Goal".localized)
                     .font(.headline)
                     .foregroundColor(.white)
                     .padding(.horizontal, 32)
@@ -137,7 +137,7 @@ struct GoalCard: View {
                         .font(.headline)
                         .foregroundColor(ColorTheme.dynamicTextPrimary(colorScheme: colorScheme))
 
-                    Text("\(goal.daysRemaining) gün kaldı")
+                    Text("\(goal.daysRemaining) \("days remaining".localized)")
                         .font(.caption)
                         .foregroundColor(ColorTheme.dynamicTextSecondary(colorScheme: colorScheme))
                 }
@@ -265,12 +265,12 @@ struct AddGoalView: View {
                     VStack(spacing: 20) {
                         // Title
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("Hedef Adı")
+                            Text("Goal Name".localized)
                                 .font(.subheadline)
                                 .fontWeight(.semibold)
                                 .foregroundColor(ColorTheme.dynamicTextPrimary(colorScheme: colorScheme))
 
-                            TextField("Örn: Kredi kartını öde", text: $title)
+                            TextField("e.g., Pay off credit card".localized, text: $title)
                                 .padding()
                                 .background(ColorTheme.dynamicCardBackground(colorScheme: colorScheme))
                                 .cornerRadius(15)
@@ -278,7 +278,7 @@ struct AddGoalView: View {
 
                         // Target Amount
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("Hedef Tutar")
+                            Text("Target Amount".localized)
                                 .font(.subheadline)
                                 .fontWeight(.semibold)
                                 .foregroundColor(ColorTheme.dynamicTextPrimary(colorScheme: colorScheme))
@@ -292,7 +292,7 @@ struct AddGoalView: View {
 
                         // Target Date
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("Hedef Tarih")
+                            Text("Target Date".localized)
                                 .font(.subheadline)
                                 .fontWeight(.semibold)
                                 .foregroundColor(ColorTheme.dynamicTextPrimary(colorScheme: colorScheme))
@@ -306,7 +306,7 @@ struct AddGoalView: View {
 
                         // Save Button
                         Button(action: saveGoal) {
-                            Text("Hedef Oluştur")
+                            Text("Create Goal".localized)
                                 .font(.headline)
                                 .foregroundColor(.white)
                                 .frame(maxWidth: .infinity)
@@ -324,11 +324,11 @@ struct AddGoalView: View {
                     .padding()
                 }
             }
-            .navigationTitle("Yeni Hedef")
+            .navigationTitle("New Goal".localized)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("İptal") {
+                    Button("Cancel".localized) {
                         dismiss()
                     }
                 }

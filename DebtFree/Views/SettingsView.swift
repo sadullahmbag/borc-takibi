@@ -43,8 +43,8 @@ struct SettingsView: View {
             }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Text("Settings")
+                ToolbarItem(placement: .principal) {
+                    Text("Settings".localized)
                         .font(.title2)
                         .fontWeight(.bold)
                         .foregroundStyle(ColorTheme.gradient1)

@@ -36,7 +36,7 @@ struct GamificationView: View {
                     .padding()
                 }
             }
-            .navigationTitle("İlerleme")
+            .navigationTitle("Progress".localized)
             .navigationBarTitleDisplayMode(.inline)
         }
     }
@@ -54,13 +54,13 @@ struct GamificationView: View {
                         .font(.system(size: 36, weight: .bold))
                         .foregroundColor(.white)
 
-                    Text("Seviye")
+                    Text("Level".localized)
                         .font(.caption)
                         .foregroundColor(.white.opacity(0.9))
                 }
             }
 
-            Text("Deneyim: \(progress.experience) / \(progress.experienceToNextLevel)")
+            Text("\("Experience".localized): \(progress.experience) / \(progress.experienceToNextLevel)")
                 .font(.caption)
                 .foregroundColor(ColorTheme.dynamicTextSecondary(colorScheme: colorScheme))
 
@@ -84,7 +84,7 @@ struct GamificationView: View {
     private var challengesSection: some View {
         VStack(spacing: 16) {
             HStack {
-                Text("Aktif Görevler")
+                Text("Active Challenges".localized)
                     .font(.title3)
                     .fontWeight(.bold)
                     .foregroundColor(ColorTheme.dynamicTextPrimary(colorScheme: colorScheme))
@@ -110,7 +110,7 @@ struct GamificationView: View {
             Text("🎯")
                 .font(.system(size: 50))
 
-            Text("Görev yok")
+            Text("No challenges".localized)
                 .font(.subheadline)
                 .foregroundColor(ColorTheme.dynamicTextSecondary(colorScheme: colorScheme))
         }
@@ -129,10 +129,10 @@ struct GamificationView: View {
                 HStack {
                     Image(systemName: "flame.fill")
                         .foregroundColor(ColorTheme.orange)
-                    Text("Günlük Görev Ekle")
+                    Text("Add Daily Challenge".localized)
                         .fontWeight(.semibold)
                     Spacer()
-                    Text("+100 XP")
+                    Text("+100 \("XP".localized)")
                         .font(.caption)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
@@ -152,10 +152,10 @@ struct GamificationView: View {
                 HStack {
                     Image(systemName: "star.fill")
                         .foregroundColor(ColorTheme.purple)
-                    Text("Haftalık Görev Ekle")
+                    Text("Add Weekly Challenge".localized)
                         .fontWeight(.semibold)
                     Spacer()
-                    Text("+500 XP")
+                    Text("+500 \("XP".localized)")
                         .font(.caption)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
@@ -215,7 +215,7 @@ struct SimpleChallengeCard: View {
                 HStack(spacing: 4) {
                     Image(systemName: "clock.fill")
                         .font(.caption2)
-                    Text("\(challenge.hoursRemaining)h kaldı")
+                    Text("\(challenge.hoursRemaining)\("h left".localized)")
                         .font(.caption2)
                 }
                 .foregroundColor(ColorTheme.orange)

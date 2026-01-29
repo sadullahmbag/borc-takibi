@@ -6,7 +6,9 @@ struct DashboardView: View {
     @Environment(\.colorScheme) private var colorScheme
     @Query(sort: \Debt.createdDate, order: .reverse) private var debts: [Debt]
     @Query private var userProgressList: [UserProgress]
+    @Query private var challenges: [Challenge]
     @StateObject private var accessibilityManager = AccessibilityManager.shared
+    @StateObject private var popupManager = PopupManager.shared
 
     @State private var showAddDebt = false
     @State private var selectedDebt: Debt?
@@ -48,13 +50,13 @@ struct DashboardView: View {
                         )
                         .padding(.horizontal)
                         .accessibilityElement(children: .combine)
-                        .accessibilityLabel("Total debt summary")
+                        .accessibilityLabel("Total debt summary".localized)
 
                         if let progress = userProgress {
                             progressBanner(progress: progress)
                                 .padding(.horizontal)
                                 .accessibilityElement(children: .combine)
-                                .accessibilityLabel("Level \(progress.level) progress")
+                                .accessibilityLabel("\("Level".localized) \(progress.level) \("Progress".localized)")
                         }
 
                         debtsListSection
@@ -85,7 +87,7 @@ struct DashboardView: View {
                             .foregroundStyle(ColorTheme.gradient1)
                             .symbolEffect(.bounce, value: showAddDebt)
                     }
-                    .accessibilityLabel("Add new debt")
+                    .accessibilityLabel("Add new debt".localized)
                 }
             }
             .sheet(isPresented: $showAddDebt) {
@@ -94,18 +96,44 @@ struct DashboardView: View {
             .sheet(item: $selectedDebt) { debt in
                 PaymentView(debt: debt)
             }
-            .alert("Delete Debt?", isPresented: $showDeleteConfirmation) {
-                Button("Cancel", role: .cancel) {
+            .alert("Delete Debt?".localized, isPresented: $showDeleteConfirmation) {
+                Button("Cancel".localized, role: .cancel) {
                     debtToDelete = nil
                 }
-                Button("Delete", role: .destructive) {
+                Button("Delete".localized, role: .destructive) {
                     if let debt = debtToDelete {
                         deleteDebt(debt)
                     }
                 }
             } message: {
                 if let debt = debtToDelete {
-                    Text("Are you sure you want to delete \"\(debt.name)\"? This action cannot be undone.")
+                    Text("Are you sure you want to delete this debt? This action cannot be undone.".localized)
+                }
+            }
+            .overlay {
+                // Achievement Popup
+                if let achievement = popupManager.achievementToShow {
+                    AchievementPopupOverlay(
+                        achievement: achievement,
+                        onDismiss: {
+                            popupManager.dismissAchievement()
+                        }
+                    )
+                    .transition(.opacity)
+                    .zIndex(100)
+                }
+            }
+            .overlay {
+                // Challenge Completion Popup
+                if let challenge = popupManager.challengeToShow {
+                    ChallengeCompletionPopup(
+                        challenge: challenge,
+                        onDismiss: {
+                            popupManager.dismissChallenge()
+                        }
+                    )
+                    .transition(.opacity)
+                    .zIndex(100)
                 }
             }
         }
@@ -132,12 +160,12 @@ struct DashboardView: View {
                 .font(.system(size: 50))
 
             if activeDebts.isEmpty {
-                Text("You're debt-free!")
+                Text("You're debt-free!".localized)
                     .font(.title3)
                     .fontWeight(.semibold)
                     .foregroundColor(ColorTheme.success)
             } else {
-                Text("Your Debt Journey")
+                Text("Your Debt Journey".localized)
                     .font(.headline)
                     .foregroundColor(ColorTheme.textSecondary)
             }
@@ -158,16 +186,16 @@ struct DashboardView: View {
                         .fontWeight(.bold)
                         .foregroundColor(.white)
 
-                    Text("LVL")
+                    Text("LVL".localized)
                         .font(.caption2)
                         .foregroundColor(.white.opacity(0.9))
                 }
             }
             .accessibilityElement(children: .combine)
-            .accessibilityLabel("Level \(progress.level)")
+            .accessibilityLabel("\("Level".localized) \(progress.level)")
 
             VStack(alignment: .leading, spacing: 4) {
-                Text("Level \(progress.level)")
+                Text("\("Level".localized) \(progress.level)")
                     .font(.headline)
                     .foregroundColor(ColorTheme.dynamicTextPrimary(colorScheme: colorScheme))
 
@@ -176,7 +204,7 @@ struct DashboardView: View {
                     .scaleEffect(x: 1, y: 1.5, anchor: .center)
                     .accessibilityValue("\(Int(progress.currentLevelProgress * 100)) percent")
 
-                Text("\(progress.experience) / \(progress.experienceToNextLevel) XP")
+                Text("\(progress.experience) / \(progress.experienceToNextLevel) \("XP".localized)")
                     .font(.caption)
                     .foregroundColor(ColorTheme.dynamicTextSecondary(colorScheme: colorScheme))
             }
@@ -193,7 +221,7 @@ struct DashboardView: View {
                         .foregroundColor(ColorTheme.orange)
                 }
                 .accessibilityElement(children: .combine)
-                .accessibilityLabel("\(progress.currentStreak) month streak")
+                .accessibilityLabel("\(progress.currentStreak) \("month streak".localized)")
             }
         }
         .padding(20)
@@ -210,7 +238,7 @@ struct DashboardView: View {
     private var debtsListSection: some View {
         VStack(alignment: .leading, spacing: 16) {
             HStack {
-                Text("Your Debts")
+                Text("Your Debts".localized)
                     .font(.title2)
                     .fontWeight(.bold)
                     .foregroundColor(ColorTheme.dynamicTextPrimary(colorScheme: colorScheme))
@@ -230,7 +258,7 @@ struct DashboardView: View {
             }
             .padding(.horizontal)
             .accessibilityElement(children: .combine)
-            .accessibilityLabel("Your debts, \(activeDebts.count) active")
+            .accessibilityLabel("\("Your Debts".localized), \(activeDebts.count) \("Active Debts".localized)")
 
             if activeDebts.isEmpty {
                 emptyStateView
@@ -258,14 +286,14 @@ struct DashboardView: View {
                             selectedDebt = activeDebts[index]
                             showPayment = true
                         }) {
-                            Label("Make Payment", systemImage: "dollarsign.circle")
+                            Label("Make Payment".localized, systemImage: "dollarsign.circle")
                         }
 
                         Button(role: .destructive, action: {
                             debtToDelete = activeDebts[index]
                             showDeleteConfirmation = true
                         }) {
-                            Label("Delete", systemImage: "trash")
+                            Label("Delete".localized, systemImage: "trash")
                         }
                     }
                     .animation(
@@ -288,12 +316,12 @@ struct DashboardView: View {
             Text("🎉")
                 .font(.system(size: 60))
 
-            Text("No Active Debts")
+            Text("No Active Debts".localized)
                 .font(.title3)
                 .fontWeight(.semibold)
                 .foregroundColor(ColorTheme.textPrimary)
 
-            Text("Tap the + button to add a new debt")
+            Text("Tap the + button to add a new debt".localized)
                 .font(.subheadline)
                 .foregroundColor(ColorTheme.textSecondary)
 
@@ -301,7 +329,7 @@ struct DashboardView: View {
                 showAddDebt = true
                 HapticManager.shared.light()
             }) {
-                Text("Add Your First Debt")
+                Text("Add Your First Debt".localized)
                     .font(.headline)
                     .foregroundColor(.white)
                     .padding(.horizontal, 30)
@@ -319,7 +347,7 @@ struct DashboardView: View {
 
     private var completedDebtsSection: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("Completed")
+            Text("Completed".localized)
                 .font(.headline)
                 .foregroundColor(ColorTheme.textSecondary)
                 .padding(.horizontal)
@@ -349,7 +377,7 @@ struct CompletedDebtCard: View {
                     .foregroundColor(ColorTheme.textSecondary)
                     .strikethrough()
 
-                Text("Completed")
+                Text("Completed".localized)
                     .font(.caption)
                     .foregroundColor(ColorTheme.success)
             }

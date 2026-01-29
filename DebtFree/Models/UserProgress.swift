@@ -93,15 +93,35 @@ final class UserProgress {
 
 extension UserProgress {
     static var achievements: [(id: String, title: String, description: String, emoji: String, requirement: (UserProgress) -> Bool)] = [
-        ("first_payment", "First Step", "Made your first payment", "🎯", { _ in true }),
-        ("payment_10", "Getting Started", "Made 10 payments", "⭐", { $0.totalPaid >= 10 }),
-        ("debt_free_1", "Debt Destroyer", "Completed 1 debt", "🎊", { $0.debtsCompleted >= 1 }),
-        ("debt_free_5", "Debt Slayer", "Completed 5 debts", "🏆", { $0.debtsCompleted >= 5 }),
-        ("streak_3", "Consistent Payer", "3-month payment streak", "🔥", { $0.longestStreak >= 3 }),
-        ("streak_6", "Half Year Hero", "6-month payment streak", "💪", { $0.longestStreak >= 6 }),
-        ("level_5", "Rising Star", "Reached level 5", "✨", { $0.level >= 5 }),
-        ("level_10", "Debt Champion", "Reached level 10", "👑", { $0.level >= 10 }),
-        ("paid_1000", "Thousand Club", "Paid $1,000 total", "💵", { $0.totalPaid >= 1000 }),
-        ("paid_10000", "Ten Thousand Legend", "Paid $10,000 total", "💎", { $0.totalPaid >= 10000 })
+        // Early wins - keep users motivated
+        ("first_payment", "First Steps".localized, "First payment made".localized, "🎯", { _ in true }),
+        ("debt_free_1", "Debt Slayer".localized, "Paid off first debt".localized, "🎊", { $0.debtsCompleted >= 1 }),
+
+        // Consistency rewards
+        ("streak_3", "Consistency".localized, "3-month payment streak".localized, "🔥", { $0.longestStreak >= 3 }),
+        ("streak_6", "Dedication".localized, "6-month payment streak".localized, "💪", { $0.longestStreak >= 6 }),
+        ("streak_12", "Year Warrior".localized, "12-month payment streak".localized, "👑", { $0.longestStreak >= 12 }),
+
+        // Payment milestones
+        ("payment_25", "Getting Started".localized, "Made 25 payments".localized, "⭐", { $0.totalPaid >= 25 * 100 }), // Assuming avg 100 per payment
+        ("payment_50", "Persistence".localized, "Made 50 payments".localized, "💎", { $0.totalPaid >= 50 * 100 }),
+        ("payment_100", "Dedication Master".localized, "Made 100 payments".localized, "🏅", { $0.totalPaid >= 100 * 100 }),
+
+        // Debt completion
+        ("debt_free_3", "Debt Crusher".localized, "Paid off 3 debts".localized, "💥", { $0.debtsCompleted >= 3 }),
+        ("debt_free_5", "Debt Master".localized, "Paid off 5 debts".localized, "🏆", { $0.debtsCompleted >= 5 }),
+        ("debt_free_10", "Debt Free Hero".localized, "Paid off 10 debts".localized, "🌟", { $0.debtsCompleted >= 10 }),
+
+        // Financial milestones (realistic amounts in TRY)
+        ("paid_5000", "Small Wins".localized, "Paid 5000₺ total".localized, "💵", { $0.totalPaid >= 5000 }),
+        ("paid_25000", "Building Momentum".localized, "Paid 25000₺ total".localized, "💰", { $0.totalPaid >= 25000 }),
+        ("paid_100000", "Major Milestone".localized, "Paid 100000₺ total".localized, "💎", { $0.totalPaid >= 100000 }),
+        ("paid_500000", "Financial Freedom".localized, "Paid 500000₺ total".localized, "👑", { $0.totalPaid >= 500000 }),
+
+        // Level achievements
+        ("level_5", "Level 5".localized, "Reached level 5".localized, "✨", { $0.level >= 5 }),
+        ("level_10", "Level 10".localized, "Reached level 10".localized, "🎖️", { $0.level >= 10 }),
+        ("level_20", "Level 20".localized, "Reached level 20".localized, "🏅", { $0.level >= 20 }),
+        ("level_50", "Level 50".localized, "Reached level 50".localized, "👑", { $0.level >= 50 })
     ]
 }
