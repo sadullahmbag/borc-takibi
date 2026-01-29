@@ -282,9 +282,11 @@ struct Sparkle: Identifiable {
         challenge: Challenge(
             title: "Daily Warrior",
             details: "Make a payment today",
-            emoji: "⚡",
+            type: .daily,
+            targetValue: 1,
+            expiresAt: Date().addingTimeInterval(86400),
             reward: ChallengeReward(xp: 100),
-            expiresAt: Date().addingTimeInterval(86400)
+            emoji: "⚡"
         ),
         onDismiss: {}
     )
