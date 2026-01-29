@@ -236,7 +236,7 @@ struct PaymentView: View {
             if !userProgress.achievementsUnlocked.contains(achievement.id) &&
                achievement.requirement(userProgress) {
                 userProgress.achievementsUnlocked.append(achievement.id)
-                newlyUnlockedAchievement = achievement
+                newlyUnlockedAchievement = (id: achievement.id, title: achievement.title, description: achievement.description, emoji: achievement.emoji)
                 newAchievement = achievement.title
                 showAchievement = true
                 break // Only show one achievement at a time
