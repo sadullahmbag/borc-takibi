@@ -168,6 +168,9 @@
 			children = (
 				A10000001234567890000008 /* Preview Assets.xcassets */,
 			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
 		A20000001234567890000009 /* Components */ = {
 			isa = PBXGroup;
 			children = (
@@ -175,9 +178,6 @@
 				A20000001234567890000008 /* ChallengeCompletionPopup.swift */,
 			);
 			path = Components;
-			sourceTree = "<group>";
-		};
-			path = "Preview Content";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
