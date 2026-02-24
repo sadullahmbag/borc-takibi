@@ -1,6 +1,6 @@
 # Supabase Authentication Setup Guide
 
-This guide will help you set up Supabase authentication for the DebtFree app.
+This guide will help you set up Supabase authentication for the Borciva app.
 
 ## Prerequisites
 
@@ -13,7 +13,7 @@ This guide will help you set up Supabase authentication for the DebtFree app.
 1. Go to [supabase.com](https://supabase.com) and sign in
 2. Click "New Project"
 3. Fill in your project details:
-   - **Project name**: DebtFree (or any name you prefer)
+   - **Project name**: Borciva (or any name you prefer)
    - **Database password**: Choose a strong password
    - **Region**: Select the region closest to your users
 4. Click "Create new project"

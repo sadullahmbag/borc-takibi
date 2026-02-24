@@ -1,6 +1,6 @@
-# DebtFree - Modern Debt Tracking iOS App 🎯
+# Borciva - Modern Debt Tracking iOS App 🎯
 
-A beautiful, gamified iOS debt tracking application built with SwiftUI and SwiftData. DebtFree makes debt management enjoyable with its soft, cute design and rewarding gamification system.
+A beautiful, gamified iOS debt tracking application built with SwiftUI and SwiftData. Borciva makes debt management enjoyable with its soft, cute design and rewarding gamification system.
 
 ## Features ✨
 

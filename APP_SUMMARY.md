@@ -1,4 +1,4 @@
-# DebtFree iOS App - Complete Summary
+# Borciva iOS App - Complete Summary
 
 ## 🎉 Project Complete!
 

@@ -1,8 +1,8 @@
-# DebtFree - Feature Overview
+# Borciva - Feature Overview
 
-## What Makes DebtFree Special? 🌟
+## What Makes Borciva Special? 🌟
 
-DebtFree is not just another debt tracker - it's a **gamified wellness app** that transforms the stressful experience of managing debt into an **enjoyable, rewarding journey**.
+Borciva is not just another debt tracker - it's a **gamified wellness app** that transforms the stressful experience of managing debt into an **enjoyable, rewarding journey**.
 
 ## The Problem We Solve
 
@@ -14,7 +14,7 @@ Traditional debt tracking apps are:
 
 ## Our Solution
 
-DebtFree reimagines debt tracking with:
+Borciva reimagines debt tracking with:
 1. **Positive reinforcement** instead of stress
 2. **Game mechanics** instead of boring lists
 3. **Beautiful design** instead of spreadsheets
@@ -122,7 +122,7 @@ Designed to reduce stress:
 
 ## Comparison with Competitors
 
-| Feature | DebtFree | Traditional Apps |
+| Feature | Borciva | Traditional Apps |
 |---------|----------|------------------|
 | Gamification | ✅ Full system | ❌ None |
 | Celebrations | ✅ Confetti & animations | ❌ Just numbers |
@@ -160,7 +160,7 @@ Designed to reduce stress:
 
 ## Future Vision
 
-DebtFree is designed to evolve into:
+Borciva is designed to evolve into:
 - **Complete Financial Wellness App**
   - Savings goals with rewards
   - Budget tracking with gamification
@@ -203,11 +203,11 @@ DebtFree is designed to evolve into:
 ## Marketing Angles
 
 ### App Store Presence
-**Title**: DebtFree - Gamified Debt Tracker
+**Title**: Borciva - Gamified Debt Tracker
 
 **Subtitle**: Pay Off Debt & Level Up Your Life
 
-**Description**: Transform debt repayment into an exciting game! DebtFree combines beautiful design with powerful motivation to help you become debt-free faster.
+**Description**: Transform debt repayment into an exciting game! Borciva combines beautiful design with powerful motivation to help you become debt-free faster.
 
 ### Key Messages
 1. "The only debt tracker that makes you smile"
@@ -241,10 +241,10 @@ DebtFree is designed to evolve into:
 
 ## Conclusion
 
-DebtFree represents the **future of financial wellness apps**: combining behavioral psychology, game design, and beautiful UX to create an experience that users genuinely enjoy. It's not just about tracking debt - it's about **transforming the journey** from stressed to debt-free into something **positive, motivating, and even fun**.
+Borciva represents the **future of financial wellness apps**: combining behavioral psychology, game design, and beautiful UX to create an experience that users genuinely enjoy. It's not just about tracking debt - it's about **transforming the journey** from stressed to debt-free into something **positive, motivating, and even fun**.
 
 The app proves that financial tools don't have to be boring or anxiety-inducing. With the right design, technology, and psychology, we can help people build better financial habits while actually enjoying the process.
 
 ---
 
-**DebtFree: Because becoming debt-free should feel like winning, not suffering.** 🎯✨
+**Borciva: Because becoming debt-free should feel like winning, not suffering.** 🎯✨

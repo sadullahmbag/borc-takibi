@@ -6,7 +6,7 @@ struct OnboardingView: View {
     @Namespace private var animation
 
     private let pages: [(emoji: String, title: String, description: String)] = [
-        ("🎯", "Welcome to DebtFree", "Your journey to financial freedom starts here. Track, manage, and celebrate every step."),
+        ("🎯", "Welcome to Borciva", "Your journey to financial freedom starts here. Track, manage, and celebrate every step."),
         ("💰", "Add Your Debts", "Tap + to add debts. Customize with emojis, colors, and categories for a personal touch."),
         ("🎉", "Make Payments", "Every payment triggers celebrations! Watch your progress grow and earn achievements."),
         ("🏆", "Level Up & Achieve", "Gain XP, unlock achievements, and build payment streaks. Make debt payoff fun!")
