@@ -6,20 +6,32 @@ struct ProgressDashboardView: View {
     @Query private var payments: [Payment]
     @Query private var userProgressList: [UserProgress]
     @StateObject private var currencyManager = CurrencyManager.shared
+    @StateObject private var authManager = AuthManager.shared
     @Environment(\.colorScheme) private var colorScheme
 
+    private var filteredDebts: [Debt] {
+        guard let userId = authManager.userId else { return [] }
+        return debts.filter { $0.userId == userId }
+    }
+
+    private var filteredPayments: [Payment] {
+        guard let userId = authManager.userId else { return [] }
+        return payments.filter { $0.userId == userId }
+    }
+
     private var userProgress: UserProgress? {
-        userProgressList.first
+        guard let userId = authManager.userId else { return nil }
+        return userProgressList.first { $0.userId == userId }
     }
 
     // Calculate total debt (original)
     private var totalOriginalDebt: Double {
-        debts.reduce(0) { $0 + $1.originalAmount }
+        filteredDebts.reduce(0) { $0 + $1.originalAmount }
     }
 
     // Calculate remaining debt
     private var totalRemainingDebt: Double {
-        debts.filter { !$0.isCompleted }.reduce(0) { $0 + $1.currentAmount }
+        filteredDebts.filter { !$0.isCompleted }.reduce(0) { $0 + $1.currentAmount }
     }
 
     // Calculate overall progress
@@ -33,7 +45,7 @@ struct ProgressDashboardView: View {
         let calendar = Calendar.current
         var result: [String: [Payment]] = [:]
 
-        for payment in payments {
+        for payment in filteredPayments {
             let components = calendar.dateComponents([.year, .month], from: payment.date)
             if let year = components.year, let month = components.month {
                 let key = "\(year)-\(String(format: "%02d", month))"
@@ -215,8 +227,8 @@ struct ProgressDashboardView: View {
 
                 MilestoneRow(
                     title: "First Debt Paid Off",
-                    isCompleted: debts.contains(where: { $0.isCompleted }),
-                    date: debts.contains(where: { $0.isCompleted }) ? Date() : nil
+                    isCompleted: filteredDebts.contains(where: { $0.isCompleted }),
+                    date: filteredDebts.contains(where: { $0.isCompleted }) ? Date() : nil
                 )
 
                 MilestoneRow(
@@ -276,7 +288,7 @@ struct ProgressDashboardView: View {
                             .fontWeight(.bold)
                             .foregroundColor(ColorTheme.dynamicTextPrimary(colorScheme: colorScheme))
 
-                        Text("\(debts.count) debts")
+                        Text("\(filteredDebts.count) debts")
                             .font(.caption)
                             .foregroundColor(ColorTheme.dynamicTextSecondary(colorScheme: colorScheme))
                     }
@@ -307,7 +319,7 @@ struct ProgressDashboardView: View {
                             .fontWeight(.bold)
                             .foregroundColor(ColorTheme.dynamicTextPrimary(colorScheme: colorScheme))
 
-                        Text("\(debts.filter { !$0.isCompleted }.count) debts left")
+                        Text("\(filteredDebts.filter { !$0.isCompleted }.count) debts left")
                             .font(.caption)
                             .foregroundColor(ColorTheme.dynamicTextSecondary(colorScheme: colorScheme))
                     }

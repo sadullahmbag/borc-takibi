@@ -280,6 +280,7 @@ struct Sparkle: Identifiable {
 #Preview {
     ChallengeCompletionPopup(
         challenge: Challenge(
+            userId: "preview",
             title: "Daily Warrior",
             details: "Make a payment today",
             type: .daily,

@@ -6,13 +6,16 @@ struct GamificationView: View {
     @Query private var userProgressList: [UserProgress]
     @Environment(\.modelContext) private var modelContext
     @Environment(\.colorScheme) private var colorScheme
+    @StateObject private var authManager = AuthManager.shared
 
     private var userProgress: UserProgress? {
-        userProgressList.first
+        guard let userId = authManager.userId else { return nil }
+        return userProgressList.first { $0.userId == userId }
     }
 
     private var activeChallenges: [Challenge] {
-        challenges.filter { !$0.isCompleted && $0.expiresAt > Date() }
+        guard let userId = authManager.userId else { return [] }
+        return challenges.filter { $0.userId == userId && !$0.isCompleted && $0.expiresAt > Date() }
     }
 
     var body: some View {
@@ -173,13 +176,15 @@ struct GamificationView: View {
 
     // MARK: - Helper Functions
     private func generateDailyChallenge() {
-        let challenge = ChallengeGenerator.generateDailyChallenge()
+        guard let userId = authManager.userId else { return }
+        let challenge = ChallengeGenerator.generateDailyChallenge(for: userId)
         modelContext.insert(challenge)
         HapticManager.shared.success()
     }
 
     private func generateWeeklyChallenge() {
-        let challenge = ChallengeGenerator.generateWeeklyChallenge()
+        guard let userId = authManager.userId else { return }
+        let challenge = ChallengeGenerator.generateWeeklyChallenge(for: userId)
         modelContext.insert(challenge)
         HapticManager.shared.success()
     }
