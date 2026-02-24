@@ -13,6 +13,8 @@ struct AddDebtView: View {
     @State private var selectedEmoji: String = "💰"
     @State private var hasDueDate: Bool = false
     @State private var dueDate: Date = Date()
+    @State private var hasInterestRate: Bool = false
+    @State private var interestRate: String = ""
     @State private var showEmojiPicker: Bool = false
 
     let emojis = ["💰", "💳", "🎓", "🚗", "🏠", "💵", "🏥", "📱", "🛒", "✈️", "🎮", "📚", "💻", "🎵", "🍕", "⚡", "🌟", "🎯", "🔥", "✨"]
@@ -45,6 +47,8 @@ struct AddDebtView: View {
                             colorPicker
 
                             dueDateToggle
+
+                            interestRateToggle
                         }
                         .padding(.horizontal)
 
@@ -196,9 +200,51 @@ struct AddDebtView: View {
         .animation(.spring(), value: hasDueDate)
     }
 
+    private var interestRateToggle: some View {
+        VStack(spacing: 12) {
+            Toggle("Has Interest Rate", isOn: $hasInterestRate)
+                .padding()
+                .background(Color.white)
+                .cornerRadius(15)
+                .onChange(of: hasInterestRate) { _, _ in
+                    HapticManager.shared.light()
+                }
+
+            if hasInterestRate {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Annual Interest Rate (%)")
+                        .font(.subheadline)
+                        .foregroundColor(ColorTheme.textSecondary)
+
+                    HStack {
+                        TextField("e.g., 15.99", text: $interestRate)
+                            .keyboardType(.decimalPad)
+                            .padding()
+                            .background(Color.white)
+                            .cornerRadius(15)
+
+                        Text("%")
+                            .font(.headline)
+                            .foregroundColor(ColorTheme.textSecondary)
+                            .padding(.trailing, 8)
+                    }
+
+                    Text("💡 This helps calculate how much interest you'll pay over time")
+                        .font(.caption)
+                        .foregroundColor(ColorTheme.textSecondary)
+                        .padding(.horizontal, 4)
+                }
+                .transition(.scale.combined(with: .opacity))
+            }
+        }
+        .animation(.spring(), value: hasInterestRate)
+    }
+
     private func saveDebt() {
         guard let debtAmount = Double(amount) else { return }
         guard let userId = authManager.userId else { return }
+
+        let interestRateValue = hasInterestRate ? Double(interestRate) : nil
 
         let newDebt = Debt(
             userId: userId,
@@ -207,7 +253,8 @@ struct AddDebtView: View {
             category: category,
             emoji: selectedEmoji,
             color: selectedColor,
-            dueDate: hasDueDate ? dueDate : nil
+            dueDate: hasDueDate ? dueDate : nil,
+            interestRate: interestRateValue
         )
 
         modelContext.insert(newDebt)

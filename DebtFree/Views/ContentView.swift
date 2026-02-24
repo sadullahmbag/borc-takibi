@@ -56,6 +56,11 @@ struct ContentView: View {
                 if let userId = authManager.userId {
                     userManager.checkFirstTimeUser(userId: userId)
                 }
+
+                // Request notification permissions
+                Task {
+                    await NotificationManager.shared.requestAuthorization()
+                }
             }
         }
     }

@@ -8,6 +8,7 @@ struct SettingsView: View {
     @StateObject private var currencyManager = CurrencyManager.shared
     @StateObject private var themeManager = ThemeManager.shared
     @StateObject private var authManager = AuthManager.shared
+    @StateObject private var notificationManager = NotificationManager.shared
 
     @State private var showCurrencyPicker = false
     @State private var selectedCurrency: Currency
@@ -37,6 +38,10 @@ struct SettingsView: View {
                         themeSection
 
                         preferencesSection
+
+                        remindersSection
+
+                        exportSection
 
                         accountSection
 
@@ -263,6 +268,141 @@ struct SettingsView: View {
         }
     }
 
+    private var remindersSection: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Reminders".localized)
+                .font(.headline)
+                .foregroundColor(ColorTheme.dynamicTextPrimary(colorScheme: colorScheme))
+                .padding(.horizontal, 4)
+
+            VStack(spacing: 12) {
+                // Reminders toggle
+                Toggle(isOn: $notificationManager.remindersEnabled) {
+                    HStack(spacing: 16) {
+                        Text("🔔")
+                            .font(.title2)
+                            .frame(width: 40)
+
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Payment Reminders")
+                                .font(.headline)
+                                .foregroundColor(ColorTheme.dynamicTextPrimary(colorScheme: colorScheme))
+
+                            Text("Get daily reminders to track payments")
+                                .font(.caption)
+                                .foregroundColor(ColorTheme.dynamicTextSecondary(colorScheme: colorScheme))
+                        }
+                    }
+                }
+                .tint(ColorTheme.pink)
+                .padding(20)
+                .background(ColorTheme.dynamicCardBackground(colorScheme: colorScheme))
+                .cornerRadius(12)
+                .onChange(of: notificationManager.remindersEnabled) { _, _ in
+                    HapticManager.shared.light()
+                }
+
+                // Time picker (only show if reminders are enabled)
+                if notificationManager.remindersEnabled {
+                    VStack(alignment: .leading, spacing: 8) {
+                        HStack(spacing: 16) {
+                            Text("⏰")
+                                .font(.title2)
+                                .frame(width: 40)
+
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Reminder Time")
+                                    .font(.headline)
+                                    .foregroundColor(ColorTheme.dynamicTextPrimary(colorScheme: colorScheme))
+
+                                DatePicker("", selection: $notificationManager.reminderTime, displayedComponents: .hourAndMinute)
+                                    .labelsHidden()
+                            }
+
+                            Spacer()
+                        }
+                        .padding(20)
+                        .background(ColorTheme.dynamicCardBackground(colorScheme: colorScheme))
+                        .cornerRadius(12)
+                    }
+                    .transition(.scale.combined(with: .opacity))
+                }
+            }
+        }
+        .animation(.spring(), value: notificationManager.remindersEnabled)
+    }
+
+    private var exportSection: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Export Data".localized)
+                .font(.headline)
+                .foregroundColor(ColorTheme.dynamicTextPrimary(colorScheme: colorScheme))
+                .padding(.horizontal, 4)
+
+            VStack(spacing: 12) {
+                // CSV Export
+                Button(action: {
+                    exportToCSV()
+                }) {
+                    HStack(spacing: 16) {
+                        Text("📊")
+                            .font(.title2)
+                            .frame(width: 40)
+
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Export to CSV")
+                                .font(.headline)
+                                .foregroundColor(ColorTheme.dynamicTextPrimary(colorScheme: colorScheme))
+
+                            Text("Export your data as a spreadsheet")
+                                .font(.caption)
+                                .foregroundColor(ColorTheme.dynamicTextSecondary(colorScheme: colorScheme))
+                        }
+
+                        Spacer()
+
+                        Image(systemName: "square.and.arrow.up")
+                            .foregroundColor(ColorTheme.blue)
+                    }
+                    .padding(20)
+                    .background(ColorTheme.dynamicCardBackground(colorScheme: colorScheme))
+                    .cornerRadius(12)
+                }
+                .bouncyPress()
+
+                // PDF Export
+                Button(action: {
+                    exportToPDF()
+                }) {
+                    HStack(spacing: 16) {
+                        Text("📄")
+                            .font(.title2)
+                            .frame(width: 40)
+
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Export to PDF")
+                                .font(.headline)
+                                .foregroundColor(ColorTheme.dynamicTextPrimary(colorScheme: colorScheme))
+
+                            Text("Create a detailed PDF report")
+                                .font(.caption)
+                                .foregroundColor(ColorTheme.dynamicTextSecondary(colorScheme: colorScheme))
+                        }
+
+                        Spacer()
+
+                        Image(systemName: "doc.fill")
+                            .foregroundColor(ColorTheme.purple)
+                    }
+                    .padding(20)
+                    .background(ColorTheme.dynamicCardBackground(colorScheme: colorScheme))
+                    .cornerRadius(12)
+                }
+                .bouncyPress()
+            }
+        }
+    }
+
     private var accountSection: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Account".localized)
@@ -372,6 +512,18 @@ struct SettingsView: View {
             let newSettings = AppSettings(userId: userId)
             modelContext.insert(newSettings)
         }
+    }
+
+    private func exportToCSV() {
+        // TODO: Implement CSV export
+        HapticManager.shared.success()
+        print("📊 CSV Export requested")
+    }
+
+    private func exportToPDF() {
+        // TODO: Implement PDF export
+        HapticManager.shared.success()
+        print("📄 PDF Export requested")
     }
 
     private func signOut() async {

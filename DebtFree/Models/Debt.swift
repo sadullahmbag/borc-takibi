@@ -27,6 +27,48 @@ final class Debt {
         originalAmount - currentAmount
     }
 
+    // Interest calculation helpers
+    var monthlyInterestRate: Double {
+        guard let rate = interestRate, rate > 0 else { return 0 }
+        return rate / 100 / 12 // Convert annual percentage to monthly decimal
+    }
+
+    var monthsSinceCreation: Int {
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.month], from: createdDate, to: Date())
+        return max(components.month ?? 0, 0)
+    }
+
+    // Calculate total interest accrued since creation
+    func calculateAccruedInterest() -> Double {
+        guard let rate = interestRate, rate > 0 else { return 0 }
+
+        // Simple interest calculation: Principal × Rate × Time
+        let years = Double(monthsSinceCreation) / 12.0
+        return originalAmount * (rate / 100) * years
+    }
+
+    // Calculate current balance with accrued interest
+    func currentBalanceWithInterest() -> Double {
+        return currentAmount + calculateAccruedInterest()
+    }
+
+    // Calculate monthly interest on current balance
+    func calculateMonthlyInterest() -> Double {
+        guard let rate = interestRate, rate > 0 else { return 0 }
+        return currentAmount * monthlyInterestRate
+    }
+
+    // Total amount that will be paid if debt continues with current interest
+    func projectedTotalWithInterest(months: Int = 12) -> Double {
+        guard let rate = interestRate, rate > 0 else { return currentAmount }
+
+        // Compound interest: A = P(1 + r/n)^(nt)
+        let monthlyRate = rate / 100 / 12
+        let compoundFactor = pow(1 + monthlyRate, Double(months))
+        return currentAmount * compoundFactor
+    }
+
     init(
         userId: String,
         name: String,

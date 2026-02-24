@@ -71,6 +71,42 @@ struct DashboardView: View {
                                 .accessibilityLabel("\("Level".localized) \(progress.level) \("Progress".localized)")
                         }
 
+                        // Analytics Link
+                        NavigationLink(destination: AnalyticsView()) {
+                            HStack {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("View Analytics")
+                                        .font(.headline)
+                                        .fontWeight(.semibold)
+                                        .foregroundColor(ColorTheme.dynamicTextPrimary(colorScheme: colorScheme))
+
+                                    Text("Detailed charts and insights")
+                                        .font(.caption)
+                                        .foregroundColor(ColorTheme.dynamicTextSecondary(colorScheme: colorScheme))
+                                }
+
+                                Spacer()
+
+                                Image(systemName: "chart.bar.fill")
+                                    .font(.title2)
+                                    .foregroundColor(ColorTheme.pink)
+                            }
+                            .padding()
+                            .background(
+                                LinearGradient(
+                                    colors: [ColorTheme.pink.opacity(0.15), ColorTheme.purple.opacity(0.15)],
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                )
+                            )
+                            .cornerRadius(20)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 20)
+                                    .stroke(ColorTheme.pink.opacity(0.3), lineWidth: 1)
+                            )
+                        }
+                        .padding(.horizontal)
+
                         debtsListSection
                     }
                     .padding(.vertical)

@@ -267,25 +267,45 @@ struct AchievementCard: View {
     let isUnlocked: Bool
     @Environment(\.colorScheme) private var colorScheme
 
+    private var shareText: String {
+        "I just unlocked the \"\(achievement.title)\" achievement in Borciva! \(achievement.emoji) #DebtFree #Borciva"
+    }
+
     var body: some View {
         VStack(spacing: 8) {
-            Text(achievement.emoji)
-                .font(.system(size: 40))
-                .grayscale(isUnlocked ? 0 : 1)
-                .opacity(isUnlocked ? 1 : 0.4)
+            ZStack(alignment: .topTrailing) {
+                VStack(spacing: 8) {
+                    Text(achievement.emoji)
+                        .font(.system(size: 40))
+                        .grayscale(isUnlocked ? 0 : 1)
+                        .opacity(isUnlocked ? 1 : 0.4)
 
-            Text(achievement.title)
-                .font(.caption)
-                .fontWeight(.semibold)
-                .foregroundColor(ColorTheme.dynamicTextPrimary(colorScheme: colorScheme))
-                .multilineTextAlignment(.center)
-                .lineLimit(2)
+                    Text(achievement.title)
+                        .font(.caption)
+                        .fontWeight(.semibold)
+                        .foregroundColor(ColorTheme.dynamicTextPrimary(colorScheme: colorScheme))
+                        .multilineTextAlignment(.center)
+                        .lineLimit(2)
 
-            Text(achievement.description)
-                .font(.system(size: 10))
-                .foregroundColor(ColorTheme.dynamicTextSecondary(colorScheme: colorScheme))
-                .multilineTextAlignment(.center)
-                .lineLimit(2)
+                    Text(achievement.description)
+                        .font(.system(size: 10))
+                        .foregroundColor(ColorTheme.dynamicTextSecondary(colorScheme: colorScheme))
+                        .multilineTextAlignment(.center)
+                        .lineLimit(2)
+                }
+
+                // Share button (only for unlocked achievements)
+                if isUnlocked {
+                    ShareLink(item: shareText) {
+                        Image(systemName: "square.and.arrow.up")
+                            .font(.caption)
+                            .foregroundColor(ColorTheme.pink)
+                            .padding(6)
+                            .background(Circle().fill(Color.white.opacity(0.9)))
+                    }
+                    .offset(x: 4, y: 4)
+                }
+            }
         }
         .frame(maxWidth: .infinity)
         .padding()
