@@ -89,7 +89,7 @@ class NotificationManager: ObservableObject {
         dateComponents.minute = minute
 
         let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
-        let request = UNNotificationRequest(identifier: "dailyPaymentReminder", notificationContent: content, trigger: trigger)
+        let request = UNNotificationRequest(identifier: "dailyPaymentReminder", content: content, trigger: trigger)
 
         UNUserNotificationCenter.current().add(request) { error in
             if let error = error {
@@ -112,7 +112,7 @@ class NotificationManager: ObservableObject {
         dateComponents.minute = 0
 
         let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
-        let request = UNNotificationRequest(identifier: "weeklySummary", notificationContent: content, trigger: trigger)
+        let request = UNNotificationRequest(identifier: "weeklySummary", content: content, trigger: trigger)
 
         UNUserNotificationCenter.current().add(request) { error in
             if let error = error {
@@ -142,7 +142,7 @@ class NotificationManager: ObservableObject {
         if reminderDate > Date() {
             let components = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: reminderDate)
             let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
-            let request = UNNotificationRequest(identifier: "debt-\(debt.id.uuidString)", notificationContent: content, trigger: trigger)
+            let request = UNNotificationRequest(identifier: "debt-\(debt.id.uuidString)", content: content, trigger: trigger)
 
             UNUserNotificationCenter.current().add(request) { error in
                 if let error = error {
@@ -167,7 +167,7 @@ class NotificationManager: ObservableObject {
         content.sound = .default
 
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
-        let request = UNNotificationRequest(identifier: UUID().uuidString, notificationContent: content, trigger: trigger)
+        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
 
         UNUserNotificationCenter.current().add(request)
     }
