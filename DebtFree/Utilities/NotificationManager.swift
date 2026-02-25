@@ -144,11 +144,12 @@ class NotificationManager: ObservableObject {
             let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
             let request = UNNotificationRequest(identifier: "debt-\(debt.id.uuidString)", content: content, trigger: trigger)
 
+            let debtName = debt.name // Capture the name before the closure
             UNUserNotificationCenter.current().add(request) { error in
                 if let error = error {
                     print("❌ Error scheduling debt due reminder: \(error)")
                 } else {
-                    print("✅ Debt due reminder scheduled for \(debt.name)")
+                    print("✅ Debt due reminder scheduled for \(debtName)")
                 }
             }
         }

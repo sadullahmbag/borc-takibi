@@ -323,7 +323,7 @@ struct AnalyticsView: View {
 
     private var debtsByCategory: [(category: String, amount: Double)] {
         let categories = Dictionary(grouping: filteredDebts, by: { $0.category })
-        return categories.map { (category: $0.key, amount: $0.value.reduce(0) { $1 + $2.currentAmount }) }
+        return categories.map { (category: $0.key, amount: $0.value.reduce(0) { $0 + $1.currentAmount }) }
             .sorted { $0.amount > $1.amount }
     }
 }

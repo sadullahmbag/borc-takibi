@@ -154,7 +154,7 @@ struct DashboardView: View {
                     }
                 }
             } message: {
-                if let debt = debtToDelete {
+                if debtToDelete != nil {
                     Text("Are you sure you want to delete this debt? This action cannot be undone.".localized)
                 }
             }

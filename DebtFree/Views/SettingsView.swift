@@ -424,7 +424,7 @@ struct SettingsView: View {
                                 .font(.caption)
                                 .foregroundColor(ColorTheme.dynamicTextSecondary(colorScheme: colorScheme))
 
-                            Text(user.email ?? "No email")
+                            Text(user.email)
                                 .font(.headline)
                                 .foregroundColor(ColorTheme.dynamicTextPrimary(colorScheme: colorScheme))
                         }
