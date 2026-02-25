@@ -10,9 +10,9 @@ import CryptoKit
 class AuthManager: ObservableObject {
     static let shared = AuthManager()
 
-    @Published var isAuthenticated = false
+    @Published var isAuthenticated = true  // Start as authenticated in local mode
     @Published var currentUser: LocalUser?
-    @Published var isLoading = true
+    @Published var isLoading = false
 
     #if canImport(Supabase)
     private var supabase: SupabaseClient? {
@@ -26,17 +26,23 @@ class AuthManager: ObservableObject {
     }
 
     private init() {
-        Task {
-            await checkAuthStatus()
+        // Initialize local user immediately for local mode
+        createLocalUser()
+
+        // Check for Supabase session in background if available
+        #if canImport(Supabase)
+        if SupabaseConfig.shared.isAvailable {
+            Task {
+                await checkAuthStatus()
+            }
         }
+        #endif
     }
 
     // MARK: - Authentication Status
     func checkAuthStatus() async {
         #if canImport(Supabase)
         guard let supabase = supabase else {
-            // Local mode - automatically authenticate
-            createLocalUser()
             return
         }
 
@@ -44,14 +50,10 @@ class AuthManager: ObservableObject {
             let session = try await supabase.auth.session
             self.currentUser = LocalUser(id: session.user.id.uuidString, email: session.user.email ?? "")
             self.isAuthenticated = true
-            self.isLoading = false
         } catch {
-            // Fallback to local mode
-            createLocalUser()
+            // Already have local user, so do nothing
+            print("No Supabase session, using local mode")
         }
-        #else
-        // No Supabase available - use local mode
-        createLocalUser()
         #endif
     }
 
@@ -62,7 +64,6 @@ class AuthManager: ObservableObject {
 
         self.currentUser = LocalUser(id: localUserId, email: "local@user.com")
         self.isAuthenticated = true
-        self.isLoading = false
     }
 
     // MARK: - Sign Up

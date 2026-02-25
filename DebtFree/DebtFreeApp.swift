@@ -3,8 +3,6 @@ import SwiftData
 
 @main
 struct BorcivaApp: App {
-    @StateObject private var authManager = AuthManager.shared
-
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Debt.self,
@@ -25,19 +23,8 @@ struct BorcivaApp: App {
 
     var body: some Scene {
         WindowGroup {
-            Group {
-                if authManager.isLoading {
-                    // Loading screen while checking auth status
-                    LoadingView()
-                } else if authManager.isAuthenticated {
-                    // Show main app if authenticated
-                    ContentView()
-                        .modelContainer(sharedModelContainer)
-                } else {
-                    // Show auth screen if not authenticated
-                    AuthView()
-                }
-            }
+            ContentView()
+                .modelContainer(sharedModelContainer)
         }
     }
 }
